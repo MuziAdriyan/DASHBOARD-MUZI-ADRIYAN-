@@ -3,463 +3,480 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="NexaCore — Teknologi Masa Depan, Solusi Digital Premium">
-    <meta name="author" content="NexaCore Team">
-    <title>NexaCore • Premium Tech Agency</title>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>NexaCore • Premium Admin Dashboard 2026</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11.1.14/swiper-bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-crosshair@2.0.0/dist/chartjs-plugin-crosshair.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/TextPlugin.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/MotionPathPlugin.min.js"></script>
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/countup.js@2.8.7/dist/countUp.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/loaders/GLTFLoader.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        biruNeon: '#00D4FF',
+                        cyanNeon: '#22D3EE',
+                        unguNeon: '#8B5CF6',
+                        gelapUtama: '#020617',
+                        gelapSekunder: '#0F172A',
+                        putihLunak: '#F1F5F9',
+                        abuLunak: '#94A3B8',
+                        sukses: '#10B981',
+                        peringatan: '#F59E0B',
+                        bahaya: '#EF4444'
+                    },
+                    animation: {
+                        'pulse-glow': 'pulseGlow 2s ease-in-out infinite',
+                        'live-blink': 'liveBlink 1.5s ease-in-out infinite'
+                    },
+                    keyframes: {
+                        pulseGlow: {
+                            '0%,100%': { boxShadow: '0 0 15px rgba(0,212,255,0.3)' },
+                            '50%': { boxShadow: '0 0 30px rgba(0,212,255,0.5)' }
+                        },
+                        liveBlink: {
+                            '0%,100%': { opacity: '1' },
+                            '50%': { opacity: '0.3' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        :root {
-            --hitam-mewah: #02020A;
-            --gelap-utama: #070714;
-            --gelap-kedua: #0F0F24;
-            --gelap-ketiga: #171738;
-            --biru-neon: #00F0FF;
-            --ungu-neon: #A855F7;
-            --cyan-neon: #22D3EE;
-            --biru-terang: #60A5FA;
-            --ungu-terang: #C084FC;
-            --putih-murni: #FFFFFF;
-            --putih-lembut: #E2E8F0;
-            --abu-lembut: #94A3B8;
-            --abu-tua: #475569;
-            --hijau-sukses: #10B981;
-            --kuning-peringatan: #FBBF24;
-            --merah-bahaya: #EF4444;
-            --glow-biru: 0 0 25px rgba(0,240,255,0.5), 0 0 50px rgba(0,240,255,0.25);
-            --glow-ungu: 0 0 25px rgba(168,85,247,0.5), 0 0 50px rgba(168,85,247,0.25);
-            --glow-cyan: 0 0 25px rgba(34,211,238,0.5), 0 0 50px rgba(34,211,238,0.25);
-            --glow-gabung: 0 0 30px rgba(0,240,255,0.4), 0 0 60px rgba(168,85,247,0.2);
-            --sudut-bulat: 24px;
-            --sudut-bulat-kecil: 16px;
-            --transisi-cepat: all 0.3s cubic-bezier(0.16,1,0.3,1);
-            --transisi-lambat: all 0.7s cubic-bezier(0.16,1,0.3,1);
-            --batas-tipis: 1px solid rgba(255,255,255,0.08);
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Inter',sans-serif; }
+        html,body { min-height:100vh; overflow-x:hidden; }
+        body.dark { 
+            background: 
+                radial-gradient(circle at 10% 0%, rgba(0,212,255,0.1) 0%, transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(139,92,246,0.1) 0%, transparent 40%),
+                linear-gradient(180deg, #020617 0%, #0F172A 100%);
+            color:#F1F5F9;
         }
+        #loadingScreen { position:fixed; inset:0; z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#020617; transition:opacity 1s ease; }
+        #loadingScreen.hidden { opacity:0; visibility:hidden; }
+        .glass { background:rgba(15,23,42,0.6); backdrop-filter:blur(16px); border:1px solid rgba(255,255,255,0.08); }
+        .glass-card { 
+            background:rgba(15,23,42,0.5); backdrop-filter:blur(14px); border-radius:20px; padding:1.5rem; 
+            border:1px solid rgba(255,255,255,0.1); transition:all 0.4s ease;
+        }
+        .glass-card:hover { 
+            transform:translateY(-5px); box-shadow:0 15px 35px rgba(0,212,255,0.15);
+            border-color:rgba(0,212,255,0.3);
+        }
+        .live-badge { display:inline-flex; align-items:center; gap:0.3rem; padding:0.25rem 0.6rem; border-radius:999px; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); font-size:0.75rem; font-weight:600; color:#10B981; }
+        .live-dot { width:6px; height:6px; border-radius:50%; background:#10B981; animation:liveBlink 1.5s ease-in-out infinite; box-shadow:0 0 8px rgba(16,185,129,0.6); }
+        .sidebar { position:fixed; left:0; top:0; height:100vh; width:270px; z-index:50; transform:translateX(-100%); transition:transform 0.4s ease; }
+        .sidebar.open { transform:translateX(0); }
+        .main-content { margin-left:0; transition:margin-left 0.4s ease; }
+        @media (min-width:1024px) { .sidebar{transform:translateX(0);} .main-content{margin-left:270px;} }
+        .overlay { position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:49; opacity:0; visibility:hidden; transition:all 0.3s ease; }
+        .overlay.active { opacity:1; visibility:visible; }
+        .text-gradient { background:linear-gradient(90deg,#00D4FF,#8B5CF6); -webkit-background-clip:text; background-clip:text; color:transparent; }
+        .stat-number { font-variant-numeric:tabular-nums; font-weight:800; font-size:2rem; }
+        .btn-primary-custom { background:linear-gradient(135deg,#00D4FF,#8B5CF6); color:white; border:none; border-radius:14px; padding:0.7rem 1.4rem; font-weight:600; transition:all 0.3s ease; }
+        .btn-primary-custom:hover { transform:translateY(-2px); box-shadow:0 0 30px rgba(0,212,255,0.4); color:white; }
+        .btn-outline-custom { background:transparent; border:1px solid #00D4FF; color:#00D4FF; border-radius:14px; padding:0.7rem 1.4rem; font-weight:600; transition:all 0.3s ease; }
+        .btn-outline-custom:hover { background:rgba(0,212,255,0.1); }
+        .tab-content { display:none; }
+        .tab-content.active { display:block; animation:fadeIn 0.4s ease; }
+        @keyframes fadeIn { from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
+        .input-custom { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.15); color:#F1F5F9; border-radius:12px; padding:0.7rem 1rem; width:100%; }
+        .input-custom:focus { background:rgba(255,255,255,0.08); border-color:#00D4FF; outline:none; box-shadow:0 0 12px rgba(0,212,255,0.25); }
+        .chart-wrap { position:relative; height:300px; width:100%; }
+        .progress-ring { position:relative; width:50px; height:50px; flex-shrink:0; }
+        .progress-ring svg { transform:rotate(-90deg); width:100%; height:100%; }
+        .progress-ring circle { fill:none; stroke-width:4; }
+        .progress-ring .bg { stroke:rgba(255,255,255,0.1); }
+        .progress-ring .fill { stroke-linecap:round; stroke-dasharray:125.6; transition:stroke-dashoffset 1s ease; }
+        .trend-up { color:#10B981; display:flex; align-items:center; gap:0.2rem; font-size:0.85rem; font-weight:600; }
+        .trend-down { color:#EF4444; display:flex; align-items:center; gap:0.2rem; font-size:0.85rem; font-weight:600; }
+        .target-bar { height:4px; background:rgba(255,255,255,0.1); border-radius:999px; overflow:hidden; margin-top:0.5rem; }
+        .target-fill { height:100%; background:linear-gradient(90deg,#00D4FF,#8B5CF6); border-radius:999px; transition:width 1s ease; }
+        .modal-custom { background:rgba(15,23,42,0.95); backdrop-filter:blur(20px); border:1px solid rgba(0,212,255,0.3); border-radius:20px; color:#F1F5F9; }
+        .modal-custom .modal-header, .modal-custom .modal-footer { border-color:rgba(255,255,255,0.1); }
+        .table-custom { --bs-table-bg:transparent; --bs-table-color:#F1F5F9; --bs-table-border-color:rgba(255,255,255,0.1); }
+        .table-custom th { color:#00D4FF; font-weight:600; border-bottom:1px solid rgba(255,255,255,0.15); }
+        .table-custom td { border-bottom:1px solid rgba(255,255,255,0.08); vertical-align:middle; }
+        .table-custom tr:hover { background:rgba(0,212,255,0.05); }
+        .quick-action { display:flex; align-items:center; justify-content:center; width:44px; height:44px; border-radius:12px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); transition:all 0.3s ease; cursor:pointer; }
+        .quick-action:hover { background:rgba(0,212,255,0.1); border-color:#00D4FF; color:#00D4FF; transform:translateY(-3px); }
+        .server-dot { width:8px; height:8px; border-radius:50%; }
+        .server-dot.online { background:#10B981; box-shadow:0 0 10px rgba(16,185,129,0.6); }
+        .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:0.3rem; font-size:0.8rem; }
+        .cal-day { padding:0.5rem; text-align:center; border-radius:8px; transition:all 0.2s ease; cursor:pointer; }
+        .cal-day:hover { background:rgba(0,212,255,0.1); color:#00D4FF; }
+        .cal-day.today { background:linear-gradient(135deg,#00D4FF,#8B5CF6); color:white; font-weight:600; }
+        @media (max-width:768px) { .stat-number{font-size:1.6rem;} .chart-wrap{height:240px;} .container-fluid{padding:1rem;} }
+    </style>
+</head>
+<body class="dark">
+<div id="loadingScreen">
+    <div class="position-relative text-center">
+        <div class="w-72 h-2 rounded-full bg-white/15 overflow-hidden mb-3">
+            <div id="loadProgress" class="h-full rounded-full bg-gradient-to-r from-biruNeon to-unguNeon" style="width:0%"></div>
+        </div>
+        <div class="text-sm"><span id="loadPercent">0%</span> • <span id="loadStatus">Memuat sistem...</span></div>
+    </div>
+</div>
+<div class="overlay" id="sidebarOverlay"></div>
+<aside class="sidebar glass border-r border-white/10" id="mainSidebar">
+    <div class="p-4 border-b border-white/10">
+        <div class="d-flex align-items-center gap-3">
+            <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-biruNeon to-unguNeon flex items-center justify-center">
+                <i class="bi bi-lightning-charge text-white text-xl"></i>
+            </div>
+            <div>
+                <h5 class="fw-bold text-gradient mb-0">NexaCore</h5>
+                <p class="text-xs text-abuLunak mb-0">Admin Dashboard 2026</p>
+            </div>
+        </div>
+    </div>
+    <nav class="p-3">
+        <p class="text-xs text-abuLunak fw-semibold mb-2 px-2">MENU UTAMA</p>
+        <ul class="list-unstyled">
+            <li class="mb-1"><a href="#dashboard-analitik" class="d-flex align-items-center gap-3 p-3 rounded-xl text-white hover:bg-white/5 transition-all tab-link active" data-tab="dashboard-analitik"><i class="bi bi-grid text-lg"></i> Dashboard</a></li>
+            <li class="mb-1"><a href="#paket" class="d-flex align-items-center gap-3 p-3 rounded-xl text-abuLunak hover:bg-white/5 hover:text-biruNeon transition-all tab-link" data-tab="paket"><i class="bi bi-gem text-lg"></i> Paket Layanan</a></li>
+            <li class="mb-1"><a href="#data" class="d-flex align-items-center gap-3 p-3 rounded-xl text-abuLunak hover:bg-white/5 hover:text-biruNeon transition-all tab-link" data-tab="data"><i class="bi bi-table text-lg"></i> Data Master</a></li>
+            <li class="mb-1"><a href="#laporan" class="d-flex align-items-center gap-3 p-3 rounded-xl text-abuLunak hover:bg-white/5 hover:text-biruNeon transition-all tab-link" data-tab="laporan"><i class="bi bi-file-earmark-bar-graph text-lg"></i> Laporan</a></li>
+            <li class="mb-1"><a href="#pengaturan" class="d-flex align-items-center gap-3 p-3 rounded-xl text-abuLunak hover:bg-white/5 hover:text-biruNeon transition-all tab-link" data-tab="pengaturan"><i class="bi bi-gear text-lg"></i> Pengaturan</a></li>
+        </ul>
+    </nav>
+    <div class="absolute bottom-0 left-0 right-0 p-3 border-t border-white/10">
+        <div class="d-flex align-items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition-all">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-biruNeon to-unguNeon flex items-center justify-center text-white fw-bold">M</div>
+            <div class="flex-grow-1">
+                <h6 class="mb-0 fw-semibold">Muzi Adriyan</h6>
+                <p class="text-xs text-abuLunak mb-0">Admin Utama</p>
+                <div class="live-badge mt-1"><span class="live-dot"></span>Online</div>
+            </div>
+        </div>
+    </div>
+</aside>
+<main class="main-content min-h-screen">
+    <header class="sticky top-0 glass border-b border-white/10 px-4 py-3 z-40">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div class="d-flex align-items-center gap-3">
+                <button class="d-lg-none btn btn-icon border border-white/20 rounded-circle p-2" id="toggleSidebar"><i class="bi bi-list fs-5"></i></button>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0 bg-transparent p-0">
+                        <li class="breadcrumb-item"><a href="#" class="text-abuLunak">Beranda</a></li>
+                        <li class="breadcrumb-item active text-biruNeon" aria-current="page">Dashboard</li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+                <div class="d-none d-md-flex align-items-center gap-2 text-sm">
+                    <i class="bi bi-thermometer-half text-biruNeon"></i>
+                    <span>30°C • Cerah</span>
+                </div>
+                <div class="live-badge"><span class="live-dot"></span>LIVE</div>
+                <div class="text-end">
+                    <p class="mb-0 fw-semibold text-sm" id="currentDate"></p>
+                    <p class="text-gradient fw-bold" id="currentTime"></p>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="quick-action" title="Segarkan" id="refreshBtn"><i class="bi bi-arrow-clockwise"></i></button>
+                    <button class="quick-action" title="Ekspor"><i class="bi bi-download"></i></button>
+                    <button class="quick-action position-relative" title="Notifikasi">
+                        <i class="bi bi-bell"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger text-xs">12</span>
+                    </button>
+                </div>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="modeSwitch" checked>
+                    <label class="form-check-label" for="modeSwitch"><i class="bi bi-moon-stars"></i></label>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="container-fluid p-4">
+        <div class="tab-content active" id="dashboard-analitik">
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+                <div>
+                    <h2 class="fw-bold mb-1">Ringkasan <span class="text-gradient">Analitik</span></h2>
+                    <p class="text-abuLunak mb-0">Data real-time • Sinkronisasi aktif</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <select class="form-select bg-transparent text-white border border-white/20 w-auto">
+                        <option>7 Hari Terakhir</option>
+                        <option>30 Hari Terakhir</option>
+                    </select>
+                    <button class="btn-primary-custom btn-sm"><i class="bi bi-download me-2"></i>Laporan</button>
+                </div>
+            </div>
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; overflow-x: hidden; }
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--hitam-mewah);
-            color: var(--putih-lembut);
-            overflow-x: hidden;
-            line-height: 1.7;
-            font-weight: 400;
-        }
-        h1, h2, h3, h4, h5, h6 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; margin-bottom: 0; }
-        p { margin-bottom: 0; }
-        a { text-decoration: none; color: inherit; transition: var(--transisi-cepat); }
-        ul { list-style: none; padding-left: 0; margin-bottom: 0; }
-        img { max-width: 100%; height: auto; display: block; }
-        button { border: none; background: none; cursor: pointer; font-family: inherit; transition: var(--transisi-cepat); }
+            <div class="row g-4 mb-4">
+                <div class="col-md-6 col-xl-3">
+                    <div class="glass-card">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <p class="text-abuLunak mb-1 text-sm">Pendapatan Hari Ini</p>
+                                <p class="stat-number text-gradient">Rp <span id="pendapatanHari">0</span></p>
+                                <div class="trend-up"><i class="bi bi-arrow-up-right"></i> +12.5%</div>
+                                <div class="target-bar mt-2"><div class="target-fill" style="width:78%"></div></div>
+                            </div>
+                            <div class="progress-ring">
+                                <svg><circle class="bg" cx="25" cy="25" r="20"></circle><circle class="fill" cx="25" cy="25" r="20" style="stroke:#00D4FF;stroke-dashoffset:27.6"></circle></svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xl-3">
+                    <div class="glass-card">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <p class="text-abuLunak mb-1 text-sm">Total Proyek</p>
+                                <p class="stat-number text-white"><span id="totalProyek">0</span></p>
+                                <div class="trend-up"><i class="bi bi-arrow-up-right"></i> +8.2%</div>
+                                <div class="target-bar mt-2"><div class="target-fill" style="width:65%"></div></div>
+                            </div>
+                            <div class="progress-ring">
+                                <svg><circle class="bg" cx="25" cy="25" r="20"></circle><circle class="fill" cx="25" cy="25" r="20" style="stroke:#8B5CF6;stroke-dashoffset:43.96"></circle></svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xl-3">
+                    <div class="glass-card">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <p class="text-abuLunak mb-1 text-sm">Pelanggan Aktif</p>
+                                <p class="stat-number text-white"><span id="pelangganAktif">0</span></p>
+                                <div class="trend-down"><i class="bi bi-arrow-down-right"></i> -2.1%</div>
+                                <div class="target-bar mt-2"><div class="target-fill" style="width:92%"></div></div>
+                            </div>
+                            <div class="progress-ring">
+                                <svg><circle class="bg" cx="25" cy="25" r="20"></circle><circle class="fill" cx="25" cy="25" r="20" style="stroke:#10B981;stroke-dashoffset:10.05"></circle></svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xl-3">
+                    <div class="glass-card">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <p class="text-abuLunak mb-1 text-sm">Tingkat Berhasil</p>
+                                <p class="stat-number text-sukses"><span id="tingkatBerhasil">0</span>%</p>
+                                <div class="trend-up"><i class="bi bi-arrow-up-right"></i> +1.8%</div>
+                                <div class="target-bar mt-2"><div class="target-fill" style="width:95%"></div></div>
+                            </div>
+                            <div class="progress-ring">
+                                <svg><circle class="bg" cx="25" cy="25" r="20"></circle><circle class="fill" cx="25" cy="25" r="20" style="stroke:#F59E0B;stroke-dashoffset:6.28"></circle></svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        #layarMuat {
-            position: fixed; inset: 0; background: var(--hitam-mewah);
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            z-index: 9999; transition: opacity 1s ease, visibility 1s ease;
-        }
-        #layarMuat.selesai { opacity: 0; visibility: hidden; }
+            <div class="row g-4 mb-4">
+                <div class="col-xl-8">
+                    <div class="glass-card">
+                        <h5 class="fw-semibold mb-3">Grafik Pendapatan Bulanan</h5>
+                        <div class="chart-wrap"><canvas id="chartPendapatan"></canvas></div>
+                    </div>
+                </div>
+                <div class="col-xl-4">
+                    <div class="glass-card h-100">
+                        <h5 class="fw-semibold mb-3">Distribusi Proyek</h5>
+                        <div class="chart-wrap" style="height:220px"><canvas id="chartDistribusi"></canvas></div>
+                    </div>
+                </div>
+            </div>
 
-        .latarAuroraMuat {
-            position: absolute; inset: -50%;
-            background: radial-gradient(circle at 10% 10%, rgba(0,240,255,0.15) 0%, transparent 40%),
-                        radial-gradient(circle at 90% 90%, rgba(168,85,247,0.15) 0%, transparent 40%),
-                        radial-gradient(circle at 50% 50%, rgba(34,211,238,0.08) 0%, transparent 50%);
-            animation: auroraGerakMuat 15s ease-in-out infinite alternate;
-        }
-        @keyframes auroraGerakMuat {
-            0% { transform: translate(0,0) rotate(0deg) scale(1); }
-            33% { transform: translate(5%,-3%) rotate(4deg) scale(1.1); }
-            66% { transform: translate(-3%,5%) rotate(-3deg) scale(0.9); }
-            100% { transform: translate(0,0) rotate(0deg) scale(1); }
-        }
+            <div class="row g-4">
+                <div class="col-md-6 col-xl-3">
+                    <div class="glass-card">
+                        <h6 class="fw-semibold mb-3">Status Sistem</h6>
+                        <div class="d-flex align-items-center gap-2 text-sm mb-2"><span class="server-dot online"></span> Server: Normal</div>
+                        <div class="d-flex justify-content-between text-sm mb-1">CPU <span>42%</span></div>
+                        <div class="target-bar mb-2"><div class="target-fill" style="width:42%"></div></div>
+                        <div class="d-flex justify-content-between text-sm mb-1">RAM <span>58%</span></div>
+                        <div class="target-bar"><div class="target-fill" style="width:58%;background:linear-gradient(90deg,#8B5CF6,#A78BFA)"></div></div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xl-3">
+                    <div class="glass-card">
+                        <h6 class="fw-semibold mb-3">Kalender</h6>
+                        <div class="cal-grid">
+                            <div class="cal-day text-abuLunak">Min</div><div class="cal-day">Sen</div><div class="cal-day">Sel</div><div class="cal-day">Rab</div><div class="cal-day">Kam</div><div class="cal-day">Jum</div><div class="cal-day">Sab</div>
+                            <div class="cal-day text-abuLunak">27</div><div class="cal-day text-abuLunak">28</div><div class="cal-day text-abuLunak">29</div><div class="cal-day text-abuLunak">30</div><div class="cal-day text-abuLunak">31</div><div class="cal-day">1</div><div class="cal-day">2</div>
+                            <div class="cal-day today">3</div><div class="cal-day">4</div><div class="cal-day">5</div><div class="cal-day">6</div><div class="cal-day">7</div><div class="cal-day">8</div><div class="cal-day">9</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xl-3">
+                    <div class="glass-card">
+                        <h6 class="fw-semibold mb-3">Pengunjung</h6>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-sm">Hari Ini</span>
+                            <span class="fw-bold text-biruNeon">1.842</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-sm">Online</span>
+                            <span class="fw-bold text-sukses">356</span>
+                        </div>
+                        <div class="text-xs text-abuLunak mt-2">Uptime: 99.97%</div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xl-3">
+                    <div class="glass-card">
+                        <h6 class="fw-semibold mb-3">Aktivitas</h6>
+                        <div class="text-xs space-y-2">
+                            <div class="d-flex gap-2"><i class="bi bi-check-circle text-sukses"></i> Proyek selesai</div>
+                            <div class="d-flex gap-2"><i class="bi bi-clock text-peringatan"></i> Pembayaran diproses</div>
+                            <div class="d-flex gap-2"><i class="bi bi-person-plus text-biruNeon"></i> Pelanggan baru</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        .meshMuat {
-            position: absolute; inset: 0;
-            background-image: radial-gradient(circle at 20% 30%, rgba(0,240,255,0.05) 0%, transparent 50%),
-                              radial-gradient(circle at 80% 70%, rgba(168,85,247,0.05) 0%, transparent 50%);
-            animation: meshGerak 20s ease-in-out infinite alternate;
-        }
-        @keyframes meshGerak { 0% { transform: translateX(0) translateY(0); } 50% { transform: translateX(20px) translateY(-15px); } 100% { transform: translateX(0) translateY(0); } }
+        <div class="tab-content" id="paket">
+            <h2 class="fw-bold mb-4">Pilih <span class="text-gradient">Paket Layanan</span></h2>
+            <div class="row g-4 justify-content-center">
+                <div class="col-md-6 col-xl-4">
+                    <div class="glass-card h-100">
+                        <h4 class="fw-bold mb-2">Dasar</h4>
+                        <p class="text-abuLunak mb-3">Cocok untuk pemula</p>
+                        <p class="stat-number mb-4">Rp 99.000<span class="text-sm fw-normal">/bulan</span></p>
+                        <button class="btn-outline-custom w-100">Pilih Paket</button>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xl-4">
+                    <div class="glass-card h-100 border-2 border-biruNeon">
+                        <h4 class="fw-bold mb-2">Profesional</h4>
+                        <p class="text-abuLunak mb-3">Paling populer</p>
+                        <p class="stat-number mb-4">Rp 249.000<span class="text-sm fw-normal">/bulan</span></p>
+                        <button class="btn-primary-custom w-100">Pilih Paket</button>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xl-4">
+                    <div class="glass-card h-100">
+                        <h4 class="fw-bold mb-2">Perusahaan</h4>
+                        <p class="text-abuLunak mb-3">Solusi lengkap</p>
+                        <p class="stat-number mb-4">Rp 499.000<span class="text-sm fw-normal">/bulan</span></p>
+                        <button class="btn-outline-custom w-100">Pilih Paket</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        .gridMuat {
-            position: absolute; inset: 0;
-            background-image: linear-gradient(rgba(0,240,255,0.04) 1px, transparent 1px),
-                            linear-gradient(90deg, rgba(168,85,247,0.04) 1px, transparent 1px);
-            background-size: 60px 60px; opacity: 0.2;
-            mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%);
-            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%);
-            animation: gridScan 25s linear infinite;
-        }
-        @keyframes gridScan { 0% { transform: translateY(0); } 100% { transform: translateY(60px); } }
+        <div class="tab-content" id="data">
+            <h2 class="fw-bold mb-4">Manajemen <span class="text-gradient">Data Master</span></h2>
+            <div class="glass-card p-0 overflow-hidden">
+                <div class="p-4 border-b border-white/10 d-flex justify-content-between align-items-center flex-wrap gap-3">
+                    <input type="text" class="input-custom w-auto" placeholder="Cari data...">
+                    <button class="btn-primary-custom"><i class="bi bi-plus-lg me-2"></i>Tambah Data</button>
+                </div>
+                <div class="p-4 overflow-x-auto">
+                    <table class="table table-custom">
+                        <thead><tr><th>No</th><th>Nama</th><th>Kategori</th><th>Status</th><th>Aksi</th></tr></thead>
+                        <tbody>
+                            <tr><td>1</td><td>Website Portofolio</td><td>Pengembangan Web</td><td><span class="badge bg-sukses">Selesai</span></td><td><button class="btn btn-sm btn-outline-primary me-1">Ubah</button><button class="btn btn-sm btn-outline-danger">Hapus</button></td></tr>
+                            <tr><td>2</td><td>Sistem Keamanan</td><td>Keamanan</td><td><span class="badge bg-peringatan">Berjalan</span></td><td><button class="btn btn-sm btn-outline-primary me-1">Ubah</button><button class="btn btn-sm btn-outline-danger">Hapus</button></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
 
-        .teksturBisingMuat {
-            position: absolute; inset: 0;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
-            opacity: 0.06; pointer-events: none;
-        }
+        <div class="tab-content" id="laporan"><h2 class="fw-bold mb-4">Laporan</h2><p class="text-abuLunak">Fitur sedang dimuat...</p></div>
+        <div class="tab-content" id="pengaturan"><h2 class="fw-bold mb-4">Pengaturan</h2><p class="text-abuLunak">Fitur sedang dimuat...</p></div>
+    </div>
+</main>
 
-        .wadahPartikelMuat { position: absolute; inset: 0; overflow: hidden; }
-        .partikelNeonMuat {
-            position: absolute; border-radius: 50%;
-            background: radial-gradient(circle, var(--biru-neon), transparent 70%);
-            box-shadow: 0 0 10px var(--biru-neon);
-            animation: partikelMelayangMuat 12s ease-in-out infinite;
-        }
-        @keyframes partikelMelayangMuat {
-            0%,100% { transform: translateY(0) translateX(0); opacity: 0.15; }
-            25% { transform: translateY(-50px) translateX(20px); opacity: 0.5; }
-            50% { transform: translateY(-25px) translateX(-15px); opacity: 0.25; }
-            75% { transform: translateY(-60px) translateX(10px); opacity: 0.4; }
-        }
+<script>
+AOS.init({duration:800, once:true});
+const sidebar = document.getElementById('mainSidebar');
+const overlay = document.getElementById('sidebarOverlay');
+const toggleSidebar = document.getElementById('toggleSidebar');
+toggleSidebar.addEventListener('click', ()=>{sidebar.classList.toggle('open'); overlay.classList.toggle('active');});
+overlay.addEventListener('click', ()=>{sidebar.classList.remove('open'); overlay.classList.remove('active');});
 
-        .sorotKursorMuat {
-            position: absolute; width: 250px; height: 250px; border-radius: 50%;
-            background: radial-gradient(circle, rgba(0,240,255,0.06) 0%, transparent 65%);
-            pointer-events: none; transform: translate(-50%, -50%); transition: opacity 0.3s ease;
-        }
+const loadScreen = document.getElementById('loadingScreen');
+const loadProgress = document.getElementById('loadProgress');
+const loadPercent = document.getElementById('loadPercent');
+const loadStatus = document.getElementById('loadStatus');
+const statusList = ['Memuat sistem...','Menyiapkan antarmuka...','Memuat grafik...','Siap digunakan!'];
+let progress = 0, statusIndex = 0;
+const loadInterval = setInterval(()=>{
+    progress += Math.floor(Math.random()*5)+2;
+    if(progress>=100){ progress=100; clearInterval(loadInterval); setTimeout(()=>loadScreen.classList.add('hidden'), 800); }
+    loadProgress.style.width = progress+'%';
+    loadPercent.textContent = progress+'%';
+    if(progress>=(statusIndex+1)*25 && statusIndex<statusList.length-1){ statusIndex++; loadStatus.textContent = statusList[statusIndex]; }
+}, 120);
 
-        .wadahLogoMuat { position: relative; width: 180px; height: 180px; margin-bottom: 3rem; perspective: 1000px; }
-        .lapisanLingkaran { position: absolute; inset: 0; border-radius: 50%; border: 2px solid transparent; }
-        .lingkaran1 { border-top-color: var(--biru-neon); border-right-color: var(--ungu-neon); animation: putarCepat 2s linear infinite; box-shadow: 0 0 20px var(--biru-neon); }
-        .lingkaran2 { inset: 15px; border-bottom-color: var(--cyan-neon); border-left-color: var(--ungu-terang); animation: putarLambat 3s linear infinite reverse; opacity: 0.8; }
-        .lingkaran3 { inset: 30px; border-top-color: var(--biru-terang); border-right-color: var(--cyan-neon); animation: putarSedang 2.5s linear infinite; opacity: 0.6; }
-        .lingkaran4 { inset: 45px; border-bottom-color: var(--ungu-neon); border-left-color: var(--biru-neon); animation: putarCepat 1.8s linear infinite reverse; opacity: 0.4; }
-        @keyframes putarCepat { to { transform: rotate(360deg); } }
-        @keyframes putarLambat { to { transform: rotate(-360deg); } }
-        @keyframes putarSedang { to { transform: rotate(360deg); } }
+function updateTime(){
+    const now = new Date();
+    const hari = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'][now.getDay()];
+    const bulan = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'][now.getMonth()];
+    document.getElementById('currentDate').textContent = `${hari}, ${now.getDate()} ${bulan} ${now.getFullYear()}`;
+    document.getElementById('currentTime').textContent = now.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit',second:'2-digit'})+' WIB';
+}
+updateTime(); setInterval(updateTime, 1000);
 
-        .intiLogo {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 40px; height: 40px; border-radius: 50%;
-            background: linear-gradient(135deg, var(--biru-neon), var(--ungu-neon));
-            box-shadow: 0 0 30px var(--biru-neon), 0 0 60px var(--ungu-neon);
-            animation: denyutInti 2s ease-in-out infinite;
-        }
-        @keyframes denyutInti {
-            0%,100% { transform: translate(-50%,-50%) scale(1); }
-            50% { transform: translate(-50%,-50%) scale(1.3); }
-        }
+document.getElementById('modeSwitch').addEventListener('change', e=>{document.body.classList.toggle('dark', e.target.checked);});
 
-        .lensaSinar {
-            position: absolute; top: 50%; left: 50%; width: 300px; height: 2px;
-            background: linear-gradient(90deg, transparent, var(--biru-neon), transparent);
-            transform-origin: center; animation: sinarLensa 4s linear infinite; opacity: 0.4;
-        }
-        @keyframes sinarLensa { to { transform: rotate(360deg); } }
+document.querySelectorAll('.tab-link').forEach(link=>{
+    link.addEventListener('click', e=>{
+        e.preventDefault();
+        document.querySelectorAll('.tab-link').forEach(l=>{l.classList.remove('active','text-white'); l.classList.add('text-abuLunak');});
+        link.classList.add('active','text-white'); link.classList.remove('text-abuLunak');
+        document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+        document.getElementById(link.dataset.tab).classList.add('active');
+        if(window.innerWidth<1024){sidebar.classList.remove('open'); overlay.classList.remove('active');}
+    });
+});
 
-        .garisPindai {
-            position: absolute; left: 0; width: 100%; height: 2px;
-            background: linear-gradient(90deg, transparent, var(--biru-neon), transparent);
-            animation: pindaiGaris 3s ease-in-out infinite;
-        }
-        @keyframes pindaiGaris { 0% { top: 0; opacity: 0; } 20% { opacity: 1; } 80% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
+function initDashboard(){
+    let val1=0, val2=0, val3=0, val4=0;
+    const anim = setInterval(()=>{
+        val1 = Math.min(val1+15000, 875000);
+        val2 = Math.min(val2+2, 124);
+        val3 = Math.min(val3+3, 356);
+        val4 = Math.min(val4+0.4, 94.7);
+        document.getElementById('pendapatanHari').textContent = val1.toLocaleString('id-ID');
+        document.getElementById('totalProyek').textContent = val2;
+        document.getElementById('pelangganAktif').textContent = val3;
+        document.getElementById('tingkatBerhasil').textContent = val4.toFixed(1);
+        if(val1>=875000 && val2>=124 && val3>=356 && val4>=94.7) clearInterval(anim);
+    }, 40);
 
-        .wadahProgres { width: 320px; margin-bottom: 1rem; }
-        .barisProgres { height: 8px; background: rgba(255,255,255,0.1); border-radius: 999px; overflow: hidden; }
-        .isiProgres { height: 100%; width: 0%; background: linear-gradient(90deg, var(--biru-neon), var(--ungu-neon), var(--cyan-neon)); border-radius: inherit; box-shadow: var(--glow-gabung); position: relative; }
-        .isiProgres::after {
-            content: ''; position: absolute; top: 0; right: 0; width: 30px; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            animation: kilauProgres 1.5s linear infinite;
-        }
-        @keyframes kilauProgres { to { transform: translateX(100%); } }
+    const opt = {
+        responsive:true, maintainAspectRatio:false,
+        plugins:{legend:{labels:{color:'#94A3B8'}}, crosshair:{color:'#00D4FF'}},
+        scales:{x:{ticks:{color:'#94A3B8'}, grid:{color:'rgba(255,255,255,0.05)'}}, y:{ticks:{color:'#94A3B8'}, grid:{color:'rgba(255,255,255,0.05)'}}},
+        animation:{duration:1500, easing:'easeOutQuart'}
+    };
+    new Chart(document.getElementById('chartPendapatan'),{
+        type:'line',
+        data:{labels:['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Ags'],datasets:[{label:'Pendapatan',data:[450000,520000,610000,580000,740000,890000,950000,1100000],borderColor:'#00D4FF',backgroundColor:'rgba(0,212,255,0.1)',tension:0.4,fill:true}]},
+        options:opt
+    });
+    new Chart(document.getElementById('chartDistribusi'),{
+        type:'doughnut',
+        data:{labels:['Web','Desain','Keamanan','Lainnya'],datasets:[{data:[45,25,20,10],backgroundColor:['#00D4FF','#8B5CF6','#10B981','#F59E0B']}]},
+        options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'bottom',labels:{color:'#94A3B8'}}}}
+    });
 
-        .teksProgres { display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem; }
-        .persenMuat { font-size: 2.2rem; font-weight: 700; font-family: 'Space Grotesk', sans-serif; background: linear-gradient(90deg, var(--biru-neon), var(--ungu-neon)); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .statusMuat { font-size: 0.95rem; color: var(--abu-lembut); text-transform: uppercase; letter-spacing: 1px; }
+    setInterval(()=>{
+        const el = document.getElementById('pendapatanHari');
+        el.textContent = (Math.floor(Math.random()*50000)+850000).toLocaleString('id-ID');
+    }, 8000);
+}
+setTimeout(initDashboard, 1000);
 
-        .ikonSukses { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%) scale(0); font-size: 5rem; color: var(--hijau-sukses); opacity: 0; transition: all 0.6s cubic-bezier(0.175,0.885,0.32,1.275); }
-        .selesaiMuat .ikonSukses { transform: translate(-50%,-50%) scale(1); opacity: 1; }
-        .selesaiMuat .wadahLogoMuat > :not(.ikonSukses) { opacity: 0; transform: scale(0.7) rotateY(180deg); transition: all 0.5s ease; }
-
-        .garisKemajuan {
-            position: fixed; top: 0; left: 0; height: 3px; z-index: 9998;
-            background: linear-gradient(90deg, var(--biru-neon), var(--ungu-neon), var(--cyan-neon));
-            border-radius: 0 2px 2px 0; width: 0%; box-shadow: var(--glow-gabung);
-        }
-
-        .latarUtama { position: fixed; inset: 0; z-index: -5; overflow: hidden; }
-        .kanvasTigaD { position: absolute; inset: 0; width: 100%; height: 100%; }
-        .latarGradien {
-            position: absolute; inset: -50%;
-            background: radial-gradient(circle at 15% 25%, rgba(0,240,255,0.1) 0%, transparent 45%),
-                        radial-gradient(circle at 85% 75%, rgba(168,85,247,0.1) 0%, transparent 45%),
-                        radial-gradient(circle at 50% 50%, rgba(34,211,238,0.05) 0%, transparent 55%);
-            animation: gerakGradienUtama 30s ease-in-out infinite alternate;
-        }
-        @keyframes gerakGradienUtama {
-            0% { transform: translate(0,0) rotate(0deg) scale(1); }
-            25% { transform: translate(4%,-3%) rotate(3deg) scale(1.05); }
-            50% { transform: translate(-3%,4%) rotate(-2deg) scale(0.95); }
-            100% { transform: translate(0,0) rotate(0deg) scale(1); }
-        }
-        .bentukBlobUtama {
-            position: absolute; border-radius: 999px; filter: blur(120px); opacity: 0.35;
-            animation: gerakBlobUtama 25s ease-in-out infinite alternate;
-        }
-        .blobUtama1 { width: 700px; height: 700px; background: rgba(0,240,255,0.12); top: -250px; left: -200px; }
-        .blobUtama2 { width: 600px; height: 600px; background: rgba(168,85,247,0.12); bottom: -200px; right: -150px; animation-delay: -10s; }
-        .blobUtama3 { width: 500px; height: 500px; background: rgba(34,211,238,0.08); top: 30%; left: 60%; animation-delay: -18s; }
-        @keyframes gerakBlobUtama {
-            0% { transform: translate(0,0) scale(1) rotate(0deg); }
-            33% { transform: translate(60px,-50px) scale(1.15) rotate(10deg); }
-            66% { transform: translate(-50px,40px) scale(0.85) rotate(-8deg); }
-            100% { transform: translate(0,0) scale(1) rotate(0deg); }
-        }
-        .gridUtama {
-            position: absolute; inset: 0;
-            background-image: linear-gradient(rgba(0,240,255,0.03) 1px, transparent 1px),
-                            linear-gradient(90deg, rgba(168,85,247,0.03) 1px, transparent 1px);
-            background-size: 100px 100px; opacity: 0.2;
-            mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%);
-            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%);
-            animation: gerakGridUtama 35s linear infinite;
-        }
-        @keyframes gerakGridUtama { 0% { transform: translateY(0); } 100% { transform: translateY(100px); } }
-        .sorotKursorUtama {
-            position: fixed; width: 350px; height: 350px; border-radius: 50%;
-            background: radial-gradient(circle, rgba(0,240,255,0.05) 0%, transparent 70%);
-            pointer-events: none; z-index: 0; transform: translate(-50%, -50%); transition: opacity 0.3s ease;
-        }
-        @media (max-width: 768px) { .sorotKursorUtama { display: none; } }
-
-        .kacaPremium {
-            background: rgba(15,15,35,0.5); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border: var(--batas-tipis); border-radius: var(--sudut-bulat); transition: var(--transisi-cepat);
-        }
-        .kacaPremium:hover { border-color: rgba(0,240,255,0.3); box-shadow: 0 20px 50px rgba(0,0,0,0.35); }
-        .teksGradienUtama {
-            background: linear-gradient(90deg, var(--biru-neon), var(--ungu-neon), var(--cyan-neon));
-            background-size: 200% auto; -webkit-background-clip: text; background-clip: text; color: transparent;
-            animation: alurGradienTeks 7s linear infinite;
-        }
-        @keyframes alurGradienTeks { to { background-position: 200% center; } }
-        .batasGradienUtama {
-            position: relative; border-radius: var(--sudut-bulat); padding: 1px;
-            background: linear-gradient(135deg, var(--biru-neon), var(--ungu-neon), var(--cyan-neon));
-        }
-        .batasGradienUtama > div { background: var(--gelap-utama); border-radius: calc(var(--sudut-bulat) - 1px); padding: 2.5rem; height: 100%; }
-        .tombolUtamaPremium {
-            position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 0.75rem;
-            padding: 1rem 2.25rem; border-radius: 999px; font-weight: 600; font-size: 1.05rem;
-            border: none; cursor: pointer; overflow: hidden; text-decoration: none;
-            background: linear-gradient(135deg, var(--biru-neon), var(--ungu-neon));
-            color: var(--putih-murni); box-shadow: var(--glow-gabung); transition: var(--transisi-cepat);
-        }
-        .tombolUtamaPremium::before {
-            content: ''; position: absolute; inset: 0;
-            background: radial-gradient(circle at center, rgba(255,255,255,0.3) 0%, transparent 60%);
-            transform: scale(0) translate(15%,15%); transition: transform 0.6s ease; border-radius: inherit;
-        }
-        .tombolUtamaPremium::after {
-            content: ''; position: absolute; inset: -2px; border-radius: inherit;
-            background: linear-gradient(135deg, var(--biru-neon), var(--ungu-neon), var(--cyan-neon));
-            opacity: 0; z-index: -1; filter: blur(15px); transition: opacity 0.4s ease;
-        }
-        .tombolUtamaPremium:hover { transform: translateY(-4px) scale(1.02); }
-        .tombolUtamaPremium:hover::before { transform: scale(2.5) translate(0,0); }
-        .tombolUtamaPremium:hover::after { opacity: 0.5; }
-        .tombolSekunderPremium {
-            display: inline-flex; align-items: center; justify-content: center; gap: 0.75rem;
-            padding: 1rem 2.25rem; border-radius: 999px; font-weight: 600; font-size: 1.05rem;
-            border: 2px solid rgba(255,255,255,0.15); background: transparent; color: var(--putih-lembut);
-            cursor: pointer; text-decoration: none; transition: var(--transisi-cepat);
-        }
-        .tombolSekunderPremium:hover { border-color: var(--biru-neon); color: var(--biru-neon); box-shadow: var(--glow-biru); transform: translateY(-4px); }
-        .efekRiak { position: relative; overflow: hidden; }
-        .riak {
-            position: absolute; border-radius: 50%; background: rgba(255,255,255,0.4); transform: scale(0);
-            animation: sebarkanRiak 0.7s ease-out; pointer-events: none;
-        }
-        @keyframes sebarkanRiak { to { transform: scale(4); opacity: 0; } }
-        .tombolMagnetis { transition: transform 0.2s ease-out; }
-        .melayangKartu { transition: transform 0.5s cubic-bezier(0.16,1,0.3,1), box-shadow 0.5s ease; }
-        .melayangKartu:hover { transform: translateY(-10px) scale(1.01); box-shadow: 0 25px 55px rgba(0,0,0,0.3); }
-
-        .navPremium {
-            position: fixed; top: 1.75rem; left: 50%; transform: translateX(-50%); width: 92%; max-width: 1400px;
-            z-index: 50; border-radius: 999px; padding: 1rem 2.5rem;
-            background: rgba(8,8,20,0.65); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
-            border: var(--batas-tipis); transition: var(--transisi-cepat);
-        }
-        .navPremium:hover { border-color: rgba(0,240,255,0.25); box-shadow: 0 15px 50px rgba(0,0,0,0.25); }
-        .tautanNavPremium { position: relative; font-weight: 500; }
-        .tautanNavPremium::after {
-            content: ''; position: absolute; bottom: -6px; left: 50%; transform: translateX(-50%);
-            width: 0; height: 3px; border-radius: 999px;
-            background: linear-gradient(90deg, var(--biru-neon), var(--ungu-neon));
-            transition: width 0.4s ease;
-        }
-        .tautanNavPremium:hover::after { width: 100%; }
-        .tombolPencarianNav { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: var(--batas-tipis); }
-        .tombolPencarianNav:hover { border-color: var(--biru-neon); color: var(--biru-neon); box-shadow: var(--glow-biru); }
-        .tombolSelulerNav { display: none; width: 44px; height: 44px; border-radius: 50%; align-items: center; justify-content: center; border: var(--batas-tipis); }
-        @media (max-width: 991px) { .tombolSelulerNav { display: flex; } .daftarTautanNav { display: none; } }
-        .menuSelulerPremium {
-            position: fixed; top: 0; right: -100%; width: 88%; max-width: 420px; height: 100vh;
-            background: rgba(8,8,20,0.95); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
-            border-left: var(--batas-tipis); z-index: 55; padding: 2.5rem; transition: right 0.5s cubic-bezier(0.16,1,0.3,1);
-        }
-        .menuSelulerPremium.buka { right: 0; }
-        .tutupMenuSeluler { position: absolute; top: 2rem; right: 2rem; width: 40px; height: 40px; border-radius: 50%; border: var(--batas-tipis); display: flex; align-items: center; justify-content: center; }
-        .tutupMenuSeluler:hover { border-color: var(--merah-bahaya); color: var(--merah-bahaya); }
-        .lapisanGelapMenu {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 54; opacity: 0; visibility: hidden; transition: var(--transisi-cepat);
-        }
-        .lapisanGelapMenu.aktif { opacity: 1; visibility: visible; }
-
-        .bagianHeroPremium { min-height: 100vh; display: flex; align-items: center; padding-top: 12rem; padding-bottom: 6rem; position: relative; overflow: hidden; }
-        .elemenHiasanHero { position: absolute; opacity: 0.4; animation: melayangLambatHero 10s ease-in-out infinite alternate; }
-        @keyframes melayangLambatHero {
-            0% { transform: translateY(0) rotate(-4deg); }
-            100% { transform: translateY(-25px) rotate(4deg); }
-        }
-        .kotakIlustrasiHero { position: relative; height: 550px; perspective: 1200px; }
-        .ilustrasi3dHero {
-            position: absolute; inset: 0; border-radius: var(--sudut-bulat);
-            background: linear-gradient(135deg, rgba(0,240,255,0.1), rgba(168,85,247,0.1));
-            border: var(--batas-tipis); transform-style: preserve-3d;
-            animation: putarLambatHero 18s ease-in-out infinite alternate;
-        }
-        @keyframes putarLambatHero {
-            0% { transform: rotateX(8deg) rotateY(-12deg); }
-            100% { transform: rotateX(-8deg) rotateY(12deg); }
-        }
-        .ikonTengahHero { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 6rem; background: var(--glow-gabung); color: var(--biru-neon); }
-
-        .sliderKlienPremium { padding: 2.5rem 0; border-top: var(--batas-tipis); border-bottom: var(--batas-tipis); }
-        .swiperKlienPremium .swiper-slide { display: flex; align-items: center; justify-content: center; height: 90px; opacity: 0.5; filter: grayscale(100%); transition: all 0.4s ease; }
-        .swiperKlienPremium .swiper-slide:hover { opacity: 1; filter: grayscale(0); transform: scale(1.15); }
-
-        .kartuLayananPremium { height: 100%; padding: 2.5rem; border-radius: var(--sudut-bulat); border: var(--batas-tipis); background: rgba(10,10,28,0.4); transition: var(--transisi-cepat); position: relative; overflow: hidden; }
-        .kartuLayananPremium::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(0,240,255,0.1), transparent); transition: left 0.8s ease; }
-        .kartuLayananPremium:hover::before { left: 100%; }
-        .kartuLayananPremium:hover { border-color: var(--biru-neon); transform: translateY(-10px); box-shadow: 0 25px 50px rgba(0,240,255,0.12); }
-        .wadahIkonLayananPremium { width: 70px; height: 70px; border-radius: var(--sudut-bulat-kecil); background: linear-gradient(135deg, rgba(0,240,255,0.15), rgba(168,85,247,0.15)); display: flex; align-items: center; justify-content: center; margin-bottom: 1.75rem; }
-        .wadahIkonLayananPremium i { font-size: 1.75rem; color: var(--biru-neon); }
-
-        .langkahProsesPremium { position: relative; padding-left: 3.5rem; padding-bottom: 3rem; }
-        .langkahProsesPremium::before { content: ''; position: absolute; left: 18px; top: 40px; width: 2px; height: calc(100% - 25px); background: linear-gradient(to bottom, var(--biru-neon), var(--ungu-neon), transparent); }
-        .langkahProsesPremium:last-child::before { display: none; }
-        .nomorLangkahPremium {
-            position: absolute; left: 0; top: 0; width: 36px; height: 36px; border-radius: 50%;
-            background: linear-gradient(135deg, var(--biru-neon), var(--ungu-neon));
-            display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1rem;
-            box-shadow: var(--glow-gabung);
-        }
-
-        .bentoGridPremium { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
-        @media (max-width: 991px) { .bentoGridPremium { grid-template-columns: repeat(2, 1fr); } }
-        @media (max-width: 575px) { .bentoGridPremium { grid-template-columns: 1fr; } }
-        .bentoItem { border-radius: var(--sudut-bulat); border: var(--batas-tipis); background: rgba(10,10,28,0.4); padding: 2rem; transition: var(--transisi-cepat); overflow: hidden; position: relative; }
-        .bentoItem.luas2 { grid-column: span 2; }
-        .bentoItem.tinggi2 { grid-row: span 2; }
-        .bentoItem:hover { border-color: var(--ungu-neon); transform: translateY(-8px); box-shadow: var(--glow-ungu); }
-
-        .kartuPortofolioPremium { border-radius: var(--sudut-bulat); overflow: hidden; border: var(--batas-tipis); background: rgba(10,10,28,0.4); transition: var(--transisi-cepat); position: relative; }
-        .kartuPortofolioPremium:hover { border-color: var(--ungu-neon); transform: translateY(-12px); box-shadow: 0 30px 60px rgba(168,85,247,0.15); }
-        .wadahGambarPortofolio { width: 100%; height: 260px; overflow: hidden; position: relative; background: linear-gradient(135deg, var(--gelap-kedua), var(--gelap-ketiga)); display: flex; align-items: center; justify-content: center; font-size: 5rem; color: var(--biru-neon); }
-        .kartuPortofolioPremium:hover .wadahGambarPortofolio > * { transform: scale(1.1); }
-        .isiPortofolioPremium { padding: 1.75rem; }
-        .labelKategoriPortofolio { display: inline-block; padding: 0.3rem 0.9rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600; background: rgba(0,240,255,0.1); color: var(--biru-neon); margin-bottom: 1.25rem; }
-        .tombolLihatPortofolio { position: absolute; top: 1.75rem; right: 1.75rem; width: 44px; height: 44px; border-radius: 50%; background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; opacity: 0; transform: translateY(15px); transition: all 0.4s ease; }
-        .kartuPortofolioPremium:hover .tombolLihatPortofolio { opacity: 1; transform: translateY(0); }
-
-        .kartuHargaPremium { height: 100%; padding: 2.5rem; border-radius: var(--sudut-bulat); border: var(--batas-tipis); background: rgba(10,10,28,0.4); transition: var(--transisi-cepat); position: relative; overflow: hidden; }
-        .kartuHargaPremium.unggulan { border-color: var(--biru-neon); background: rgba(0,240,255,0.05); box-shadow: var(--glow-gabung); transform: scale(1.03); }
-        .labelUnggulanHarga { position: absolute; top: 1.5rem; right: -3rem; padding: 0.5rem 3.5rem; background: linear-gradient(90deg, var(--biru-neon), var(--ungu-neon)); font-size: 0.7rem; font-weight: 700; transform: rotate(45deg); }
-        .kartuHargaPremium:hover { transform: translateY(-12px); }
-        .kartuHargaPremium.unggulan:hover { transform: translateY(-12px) scale(1.05); }
-        .daftarFiturHarga { margin: 2rem 0; }
-        .daftarFiturHarga li { padding: 0.6rem 0; display: flex; align-items: center; gap: 0.6rem; font-size: 0.95rem; }
-        .daftarFiturHarga li i { color: var(--hijau-sukses); }
-        .daftarFiturHarga li.tidak { color: var(--abu-tua); }
-        .daftarFiturHarga li.tidak i { color: var(--abu-tua); }
-
-        .itemTanyaPremium { border-bottom: var(--batas-tipis); padding: 1.75rem 0; cursor: pointer; }
-        .itemTanyaPremium:last-child { border-bottom: none; }
-        .pertanyaanPremium { display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: 1.1rem; }
-        .ikonTanyaPremium { transition: transform 0.4s ease; }
-        .jawabanPremium { max-height: 0; overflow: hidden; transition: max-height 0.5s ease, margin-top 0.5s ease; color: var(--abu-lembut); }
-        .itemTanyaPremium.buka .jawabanPremium { max-height: 250px; margin-top: 1.25rem; }
-        .itemTanyaPremium.buka .ikonTanyaPremium { transform: rotate(45deg); }
-
-        .wadahFormulirPremium { padding: 3rem; border-radius: var(--sudut-bulat); border: var(--batas-tipis); background: rgba(10,10,28,0.4); }
-        .kelompokInputPremium { margin-bottom: 1.5rem; }
-        .kelompokInputPremium label { display: block; margin-bottom: 0.6rem; font-size: 0.95rem; font-weight: 500; }
-        .kelompokInputPremium input, .kelompokInputPremium textarea, .kelompokInputPremium select {
-            width: 100%; padding: 1rem 1.25rem; border-radius: var(--sudut-bulat-kecil);
-            border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03);
-            color: var(--putih-lembut); font-size: 1rem; outline: none; transition: var(--transisi-cepat);
-        }
-        .kelompokInputPremium input:focus, .kelompokInputPremium textarea:focus, .kelompokInputPremium select:focus {
-            border-color: var(--biru-neon); box-shadow: 0 0 0 4px rgba(0,240,255,0.15);
-        }
-        .kelompokInputPremium textarea { min-height: 180px; resize: vertical; }
-
-        .bagianFooterPremium { padding-top: 6rem; border-top: var(--batas-tipis); background: rgba(5,5,15,0.5); }
-        .tautanFooterPremium { display: block; padding: 0.5rem 0; color: var(--abu-lembut); transition: var(--transisi-cepat); }
-        .tautanFooterPremium:hover { color: var(--biru-neon); padding-left: 6px; }
-        .sosialFooterPremium { display: flex; gap: 1rem; margin-top: 1.25rem; }
-        .tautanSosialFooterPremium { width: 42px; height: 42px; border-radius: 50%; border: var(--batas-tipis); display: flex; align-items: center; justify-content: center; transition: var(--transisi-cepat); }
-        .tautanSosialFooterPremium:hover { border-color: var(--biru-neon); color: var(--biru-neon); box-shadow: var(--glow-biru); transform: translateY(-4px); }
-        .bawahFooterPremium { padding: 2.5rem 0; border-top: var(--batas-tipis); margin-top: 4rem; }
-
-        .tombolWhatsappPremium {
-            position: fixed; bottom: 2.5rem; right: 2.5rem; width: 60px; height: 60px; border-radius: 50%;
-            background: #25D366; color: var(--putih-murni); display: flex; align-items: center; justify-content: center;
-            font-size: 1.75rem; z-index: 40; box-shadow: 0 8px 25px rgba(37,211,102,0.45); transition: var(--transisi-cepat);
-            animation: denyutWhatsapp 2.5s ease infinite;
-        }
-        @keyframes denyutWhatsapp { 0%,100% { box-shadow: 0 0 0 0 rgba(37,211,102,0.4); } 50% { box-shadow: 0 0 0 20px rgba(37,211,102,0); } }
-        .tombolWhatsappPremium:hover { transform: translateY(-6px) scale(1.1); }
-        .tombolKembaliAtasPremium {
-            position: fixed; bottom: 2.5rem; left: 2.5rem; width: 52px; height: 52px; border-radius: 50%;
-            border: var(--batas-tipis); background: rgba(10,10,28,0.8); backdrop-filter: blur(15px);
-            display: flex; align-items: center; justify-content: center; font-size: 1.3rem; z-index: 40;
-            opacity: 0; visibility: hidden; transition: var(--transisi-cepat);
-        }
-        .tombolKembaliAtasPremium.tampil { opacity: 1; visibility: visible; }
-        .tombolKembaliAtasPremium:hover { border-color: var(--biru-neon); color: var(--biru-neon); box-shadow: var(--glow-biru); transform: translateY(-4px); }
-
-        .pemberitahuanPremium {
-            position: fixed; top: 2.5rem; right: 2.5rem; max-width: 400px; padding: 1.5rem;
-            border-radius: var(--sudut-bulat); border: var(--batas-tipis); background: rgba(10,10,28,0.95);
-            backdrop-filter: blur(20px); z-index: 50; transform: translateX(130%); opacity: 0; transition: all 0.5s cubic-bezier(0.16,1,0.3,1);
-        }
-        .pemberitahuanPremium.aktif { transform: translateX(0); opacity: 1; }
-        .ikonPemberitahuanPremium { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-        .ikonPemberitahuanPremium.sukses { background: rgba(16,185,129,0.15); color: var(--hijau-sukses); }
-        .ikonPemberitahuanPremium.info { background: rgba(0,240,255,0.15); color: var(--biru-neon); }
-        .ikonPemberitahuanPremium.peringatan { background: rgba(251,191,36,0.15); color: var(--kuning-peringatan); }
-        .ikonPemberitahuanPremium.bahaya { background: rgba(239,68,68,0.15); color: var(--merah-bahaya); }
-
-        .wadahGrafikPremium { padding: 2rem; border-radius: var(--sudut-bulat); border: var(--batas-tipis); background: rgba(10,10,28,0.4); }
-        .papanKodePremium {
-            background: #050512; border-radius: var(--sudut-bulat); border: var(--batas-tipis); padding: 2rem;
-            font-family: 'Courier New', monospace; font-size: 0.9rem; overflow-x: auto; position: relative;
-        }
-        .barisKodePremium { color: var(--abu-lembut); }
-        .kataKunciKode { color: var(--ungu-neon); }
-        .nilaiKunciKode { color: var(--biru-neon); }
-        .komentarKode { color: var(--abu-tua); font-style: italic; }
-
-        .pemuatKerangkaPremium { background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.12) 50%, rgba(255,
+document.getElementById('refreshBtn').addEventListener('click', ()=>{
+    loadScreen.classList.remove('hidden');
+    setTimeout(()=>{loadScreen.classList.add('hidden'); initDashboard();}, 1500);
+});
+</script>
+</body>
+</html>
