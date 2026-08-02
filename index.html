@@ -11,7 +11,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-crosshair@2.0.0/dist/chartjs-plugin-crosshair.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/countup.js@2.8.7/dist/countUp.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         tailwind.config = {
@@ -19,9 +18,10 @@
             theme: {
                 extend: {
                     colors: {
-                        biruNeon: '#00D4FF',
-                        cyanNeon: '#22D3EE',
-                        unguNeon: '#8B5CF6',
+                        biruGrafik: '#00BFFF',
+                        unguGrafik: '#9370DB',
+                        hijauGrafik: '#00B398',
+                        oranyeGrafik: '#FF9F43',
                         gelapUtama: '#020617',
                         gelapSekunder: '#0F172A',
                         putihLunak: '#F1F5F9',
@@ -36,8 +36,8 @@
                     },
                     keyframes: {
                         pulseGlow: {
-                            '0%,100%': { boxShadow: '0 0 15px rgba(0,212,255,0.3)' },
-                            '50%': { boxShadow: '0 0 30px rgba(0,212,255,0.5)' }
+                            '0%,100%': { boxShadow: '0 0 15px rgba(0,191,255,0.3)' },
+                            '50%': { boxShadow: '0 0 30px rgba(0,191,255,0.5)' }
                         },
                         liveBlink: {
                             '0%,100%': { opacity: '1' },
@@ -53,42 +53,43 @@
         html,body { min-height:100vh; overflow-x:hidden; }
         body.dark { 
             background: 
-                radial-gradient(circle at 10% 0%, rgba(0,212,255,0.1) 0%, transparent 40%),
-                radial-gradient(circle at 90% 90%, rgba(139,92,246,0.1) 0%, transparent 40%),
+                radial-gradient(circle at 10% 0%, rgba(0,191,255,0.1) 0%, transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(147,112,219,0.1) 0%, transparent 40%),
                 linear-gradient(180deg, #020617 0%, #0F172A 100%);
             color:#F1F5F9;
         }
-        #loadingScreen { position:fixed; inset:0; z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#020617; transition:opacity 1s ease; }
+        #loadingScreen { position:fixed; inset:0; z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#020617; transition:opacity 1s ease, visibility 1s ease; }
         #loadingScreen.hidden { opacity:0; visibility:hidden; }
         .glass { background:rgba(15,23,42,0.6); backdrop-filter:blur(16px); border:1px solid rgba(255,255,255,0.08); }
         .glass-card { 
-            background:rgba(15,23,42,0.5); backdrop-filter:blur(14px); border-radius:20px; padding:1.5rem; 
+            background:rgba(15,23,42,0.5); backdrop-filter:blur(14px); border-radius:24px; padding:1.75rem; 
             border:1px solid rgba(255,255,255,0.1); transition:all 0.4s ease;
         }
         .glass-card:hover { 
-            transform:translateY(-5px); box-shadow:0 15px 35px rgba(0,212,255,0.15);
-            border-color:rgba(0,212,255,0.3);
+            transform:translateY(-5px); box-shadow:0 15px 35px rgba(0,191,255,0.15);
+            border-color:rgba(0,191,255,0.3);
         }
         .live-badge { display:inline-flex; align-items:center; gap:0.3rem; padding:0.25rem 0.6rem; border-radius:999px; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); font-size:0.75rem; font-weight:600; color:#10B981; }
         .live-dot { width:6px; height:6px; border-radius:50%; background:#10B981; animation:liveBlink 1.5s ease-in-out infinite; box-shadow:0 0 8px rgba(16,185,129,0.6); }
-        .sidebar { position:fixed; left:0; top:0; height:100vh; width:270px; z-index:50; transform:translateX(-100%); transition:transform 0.4s ease; }
+        .sidebar { position:fixed; left:0; top:0; height:100vh; width:270px; transform:translateX(-100%); transition:transform 0.4s ease; z-index:50; }
         .sidebar.open { transform:translateX(0); }
         .main-content { margin-left:0; transition:margin-left 0.4s ease; }
         @media (min-width:1024px) { .sidebar{transform:translateX(0);} .main-content{margin-left:270px;} }
         .overlay { position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:49; opacity:0; visibility:hidden; transition:all 0.3s ease; }
         .overlay.active { opacity:1; visibility:visible; }
-        .text-gradient { background:linear-gradient(90deg,#00D4FF,#8B5CF6); -webkit-background-clip:text; background-clip:text; color:transparent; }
+        .text-gradient { background:linear-gradient(90deg,#00BFFF,#9370DB); -webkit-background-clip:text; background-clip:text; color:transparent; }
         .stat-number { font-variant-numeric:tabular-nums; font-weight:800; font-size:2rem; }
-        .btn-primary-custom { background:linear-gradient(135deg,#00D4FF,#8B5CF6); color:white; border:none; border-radius:14px; padding:0.7rem 1.4rem; font-weight:600; transition:all 0.3s ease; }
-        .btn-primary-custom:hover { transform:translateY(-2px); box-shadow:0 0 30px rgba(0,212,255,0.4); color:white; }
-        .btn-outline-custom { background:transparent; border:1px solid #00D4FF; color:#00D4FF; border-radius:14px; padding:0.7rem 1.4rem; font-weight:600; transition:all 0.3s ease; }
-        .btn-outline-custom:hover { background:rgba(0,212,255,0.1); }
+        .btn-primary-custom { background:linear-gradient(135deg,#00BFFF,#9370DB); color:white; border:none; border-radius:14px; padding:0.7rem 1.4rem; font-weight:600; transition:all 0.3s ease; }
+        .btn-primary-custom:hover { transform:translateY(-2px); box-shadow:0 0 30px rgba(0,191,255,0.4); color:white; }
+        .btn-outline-custom { background:transparent; border:1px solid #00BFFF; color:#00BFFF; border-radius:14px; padding:0.7rem 1.4rem; font-weight:600; transition:all 0.3s ease; }
+        .btn-outline-custom:hover { background:rgba(0,191,255,0.1); }
         .tab-content { display:none; }
         .tab-content.active { display:block; animation:fadeIn 0.4s ease; }
         @keyframes fadeIn { from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
         .input-custom { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.15); color:#F1F5F9; border-radius:12px; padding:0.7rem 1rem; width:100%; }
-        .input-custom:focus { background:rgba(255,255,255,0.08); border-color:#00D4FF; outline:none; box-shadow:0 0 12px rgba(0,212,255,0.25); }
-        .chart-wrap { position:relative; height:300px; width:100%; }
+        .input-custom:focus { background:rgba(255,255,255,0.08); border-color:#00BFFF; outline:none; box-shadow:0 0 12px rgba(0,191,255,0.25); }
+        .chart-wrap { position:relative; height:380px; width:100%; }
+        .chart-wrap-doughnut { position:relative; height:320px; width:100%; }
         .progress-ring { position:relative; width:50px; height:50px; flex-shrink:0; }
         .progress-ring svg { transform:rotate(-90deg); width:100%; height:100%; }
         .progress-ring circle { fill:none; stroke-width:4; }
@@ -97,29 +98,29 @@
         .trend-up { color:#10B981; display:flex; align-items:center; gap:0.2rem; font-size:0.85rem; font-weight:600; }
         .trend-down { color:#EF4444; display:flex; align-items:center; gap:0.2rem; font-size:0.85rem; font-weight:600; }
         .target-bar { height:4px; background:rgba(255,255,255,0.1); border-radius:999px; overflow:hidden; margin-top:0.5rem; }
-        .target-fill { height:100%; background:linear-gradient(90deg,#00D4FF,#8B5CF6); border-radius:999px; transition:width 1s ease; }
-        .modal-custom { background:rgba(15,23,42,0.95); backdrop-filter:blur(20px); border:1px solid rgba(0,212,255,0.3); border-radius:20px; color:#F1F5F9; }
+        .target-fill { height:100%; background:linear-gradient(90deg,#00BFFF,#9370DB); border-radius:999px; transition:width 1s ease; }
+        .modal-custom { background:rgba(15,23,42,0.95); backdrop-filter:blur(20px); border:1px solid rgba(0,191,255,0.3); border-radius:20px; color:#F1F5F9; }
         .modal-custom .modal-header, .modal-custom .modal-footer { border-color:rgba(255,255,255,0.1); }
         .table-custom { --bs-table-bg:transparent; --bs-table-color:#F1F5F9; --bs-table-border-color:rgba(255,255,255,0.1); }
-        .table-custom th { color:#00D4FF; font-weight:600; border-bottom:1px solid rgba(255,255,255,0.15); }
+        .table-custom th { color:#00BFFF; font-weight:600; border-bottom:1px solid rgba(255,255,255,0.15); }
         .table-custom td { border-bottom:1px solid rgba(255,255,255,0.08); vertical-align:middle; }
-        .table-custom tr:hover { background:rgba(0,212,255,0.05); }
+        .table-custom tr:hover { background:rgba(0,191,255,0.05); }
         .quick-action { display:flex; align-items:center; justify-content:center; width:44px; height:44px; border-radius:12px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); transition:all 0.3s ease; cursor:pointer; }
-        .quick-action:hover { background:rgba(0,212,255,0.1); border-color:#00D4FF; color:#00D4FF; transform:translateY(-3px); }
+        .quick-action:hover { background:rgba(0,191,255,0.1); border-color:#00BFFF; color:#00BFFF; transform:translateY(-3px); }
         .server-dot { width:8px; height:8px; border-radius:50%; }
         .server-dot.online { background:#10B981; box-shadow:0 0 10px rgba(16,185,129,0.6); }
         .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:0.3rem; font-size:0.8rem; }
         .cal-day { padding:0.5rem; text-align:center; border-radius:8px; transition:all 0.2s ease; cursor:pointer; }
-        .cal-day:hover { background:rgba(0,212,255,0.1); color:#00D4FF; }
-        .cal-day.today { background:linear-gradient(135deg,#00D4FF,#8B5CF6); color:white; font-weight:600; }
-        @media (max-width:768px) { .stat-number{font-size:1.6rem;} .chart-wrap{height:240px;} .container-fluid{padding:1rem;} }
+        .cal-day:hover { background:rgba(0,191,255,0.1); color:#00BFFF; }
+        .cal-day.today { background:linear-gradient(135deg,#00BFFF,#9370DB); color:white; font-weight:600; }
+        @media (max-width:768px) { .stat-number{font-size:1.6rem;} .chart-wrap{height:300px;} .chart-wrap-doughnut{height:260px;} .container-fluid{padding:1rem;} }
     </style>
 </head>
 <body class="dark">
 <div id="loadingScreen">
     <div class="position-relative text-center">
         <div class="w-72 h-2 rounded-full bg-white/15 overflow-hidden mb-3">
-            <div id="loadProgress" class="h-full rounded-full bg-gradient-to-r from-biruNeon to-unguNeon" style="width:0%"></div>
+            <div id="loadProgress" class="h-full rounded-full bg-gradient-to-r from-biruGrafik to-unguGrafik" style="width:0%"></div>
         </div>
         <div class="text-sm"><span id="loadPercent">0%</span> • <span id="loadStatus">Memuat sistem...</span></div>
     </div>
@@ -128,7 +129,7 @@
 <aside class="sidebar glass border-r border-white/10" id="mainSidebar">
     <div class="p-4 border-b border-white/10">
         <div class="d-flex align-items-center gap-3">
-            <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-biruNeon to-unguNeon flex items-center justify-center">
+            <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-biruGrafik to-unguGrafik flex items-center justify-center">
                 <i class="bi bi-lightning-charge text-white text-xl"></i>
             </div>
             <div>
@@ -141,15 +142,15 @@
         <p class="text-xs text-abuLunak fw-semibold mb-2 px-2">MENU UTAMA</p>
         <ul class="list-unstyled">
             <li class="mb-1"><a href="#dashboard-analitik" class="d-flex align-items-center gap-3 p-3 rounded-xl text-white hover:bg-white/5 transition-all tab-link active" data-tab="dashboard-analitik"><i class="bi bi-grid text-lg"></i> Dashboard</a></li>
-            <li class="mb-1"><a href="#paket" class="d-flex align-items-center gap-3 p-3 rounded-xl text-abuLunak hover:bg-white/5 hover:text-biruNeon transition-all tab-link" data-tab="paket"><i class="bi bi-gem text-lg"></i> Paket Layanan</a></li>
-            <li class="mb-1"><a href="#data" class="d-flex align-items-center gap-3 p-3 rounded-xl text-abuLunak hover:bg-white/5 hover:text-biruNeon transition-all tab-link" data-tab="data"><i class="bi bi-table text-lg"></i> Data Master</a></li>
-            <li class="mb-1"><a href="#laporan" class="d-flex align-items-center gap-3 p-3 rounded-xl text-abuLunak hover:bg-white/5 hover:text-biruNeon transition-all tab-link" data-tab="laporan"><i class="bi bi-file-earmark-bar-graph text-lg"></i> Laporan</a></li>
-            <li class="mb-1"><a href="#pengaturan" class="d-flex align-items-center gap-3 p-3 rounded-xl text-abuLunak hover:bg-white/5 hover:text-biruNeon transition-all tab-link" data-tab="pengaturan"><i class="bi bi-gear text-lg"></i> Pengaturan</a></li>
+            <li class="mb-1"><a href="#paket" class="d-flex align-items-center gap-3 p-3 rounded-xl text-abuLunak hover:bg-white/5 hover:text-biruGrafik transition-all tab-link" data-tab="paket"><i class="bi bi-gem text-lg"></i> Paket Layanan</a></li>
+            <li class="mb-1"><a href="#data" class="d-flex align-items-center gap-3 p-3 rounded-xl text-abuLunak hover:bg-white/5 hover:text-biruGrafik transition-all tab-link" data-tab="data"><i class="bi bi-table text-lg"></i> Data Master</a></li>
+            <li class="mb-1"><a href="#laporan" class="d-flex align-items-center gap-3 p-3 rounded-xl text-abuLunak hover:bg-white/5 hover:text-biruGrafik transition-all tab-link" data-tab="laporan"><i class="bi bi-file-earmark-bar-graph text-lg"></i> Laporan</a></li>
+            <li class="mb-1"><a href="#pengaturan" class="d-flex align-items-center gap-3 p-3 rounded-xl text-abuLunak hover:bg-white/5 hover:text-biruGrafik transition-all tab-link" data-tab="pengaturan"><i class="bi bi-gear text-lg"></i> Pengaturan</a></li>
         </ul>
     </nav>
     <div class="absolute bottom-0 left-0 right-0 p-3 border-t border-white/10">
         <div class="d-flex align-items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition-all">
-            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-biruNeon to-unguNeon flex items-center justify-center text-white fw-bold">M</div>
+            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-biruGrafik to-unguGrafik flex items-center justify-center text-white fw-bold">M</div>
             <div class="flex-grow-1">
                 <h6 class="mb-0 fw-semibold">Muzi Adriyan</h6>
                 <p class="text-xs text-abuLunak mb-0">Admin Utama</p>
@@ -166,13 +167,13 @@
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb mb-0 bg-transparent p-0">
                         <li class="breadcrumb-item"><a href="#" class="text-abuLunak">Dashboard Muzi Adriyan</a></li>
-                        <li class="breadcrumb-item active text-biruNeon" aria-current="page">Admin</li>
+                        <li class="breadcrumb-item active text-biruGrafik" aria-current="page">Admin</li>
                     </ol>
                 </nav>
             </div>
             <div class="d-flex align-items-center gap-2 flex-wrap">
                 <div class="d-none d-md-flex align-items-center gap-2 text-sm">
-                    <i class="bi bi-thermometer-half text-biruNeon"></i>
+                    <i class="bi bi-thermometer-half text-biruGrafik"></i>
                     <span>30°C • Cerah</span>
                 </div>
                 <div class="live-badge"><span class="live-dot"></span>LIVE</div>
@@ -222,7 +223,7 @@
                                 <div class="target-bar mt-2"><div class="target-fill" style="width:78%"></div></div>
                             </div>
                             <div class="progress-ring">
-                                <svg><circle class="bg" cx="25" cy="25" r="20"></circle><circle class="fill" cx="25" cy="25" r="20" style="stroke:#00D4FF;stroke-dashoffset:27.6"></circle></svg>
+                                <svg><circle class="bg" cx="25" cy="25" r="20"></circle><circle class="fill" cx="25" cy="25" r="20" style="stroke:#00BFFF;stroke-dashoffset:27.6"></circle></svg>
                             </div>
                         </div>
                     </div>
@@ -237,7 +238,7 @@
                                 <div class="target-bar mt-2"><div class="target-fill" style="width:65%"></div></div>
                             </div>
                             <div class="progress-ring">
-                                <svg><circle class="bg" cx="25" cy="25" r="20"></circle><circle class="fill" cx="25" cy="25" r="20" style="stroke:#8B5CF6;stroke-dashoffset:43.96"></circle></svg>
+                                <svg><circle class="bg" cx="25" cy="25" r="20"></circle><circle class="fill" cx="25" cy="25" r="20" style="stroke:#9370DB;stroke-dashoffset:43.96"></circle></svg>
                             </div>
                         </div>
                     </div>
@@ -252,7 +253,7 @@
                                 <div class="target-bar mt-2"><div class="target-fill" style="width:92%"></div></div>
                             </div>
                             <div class="progress-ring">
-                                <svg><circle class="bg" cx="25" cy="25" r="20"></circle><circle class="fill" cx="25" cy="25" r="20" style="stroke:#10B981;stroke-dashoffset:10.05"></circle></svg>
+                                <svg><circle class="bg" cx="25" cy="25" r="20"></circle><circle class="fill" cx="25" cy="25" r="20" style="stroke:#00B398;stroke-dashoffset:10.05"></circle></svg>
                             </div>
                         </div>
                     </div>
@@ -267,7 +268,7 @@
                                 <div class="target-bar mt-2"><div class="target-fill" style="width:95%"></div></div>
                             </div>
                             <div class="progress-ring">
-                                <svg><circle class="bg" cx="25" cy="25" r="20"></circle><circle class="fill" cx="25" cy="25" r="20" style="stroke:#F59E0B;stroke-dashoffset:6.28"></circle></svg>
+                                <svg><circle class="bg" cx="25" cy="25" r="20"></circle><circle class="fill" cx="25" cy="25" r="20" style="stroke:#FF9F43;stroke-dashoffset:6.28"></circle></svg>
                             </div>
                         </div>
                     </div>
@@ -277,14 +278,14 @@
             <div class="row g-4 mb-4">
                 <div class="col-xl-8">
                     <div class="glass-card">
-                        <h5 class="fw-semibold mb-3">Grafik Pendapatan Bulanan</h5>
+                        <h3 class="fw-bold mb-4 text-xl">Grafik Pendapatan Bulanan</h3>
                         <div class="chart-wrap"><canvas id="chartPendapatan"></canvas></div>
                     </div>
                 </div>
                 <div class="col-xl-4">
                     <div class="glass-card h-100">
-                        <h5 class="fw-semibold mb-3">Distribusi Proyek</h5>
-                        <div class="chart-wrap" style="height:220px"><canvas id="chartDistribusi"></canvas></div>
+                        <h3 class="fw-bold mb-4 text-xl">Distribusi Proyek</h3>
+                        <div class="chart-wrap-doughnut"><canvas id="chartDistribusi"></canvas></div>
                     </div>
                 </div>
             </div>
@@ -297,7 +298,7 @@
                         <div class="d-flex justify-content-between text-sm mb-1">CPU <span>42%</span></div>
                         <div class="target-bar mb-2"><div class="target-fill" style="width:42%"></div></div>
                         <div class="d-flex justify-content-between text-sm mb-1">RAM <span>58%</span></div>
-                        <div class="target-bar"><div class="target-fill" style="width:58%;background:linear-gradient(90deg,#8B5CF6,#A78BFA)"></div></div>
+                        <div class="target-bar"><div class="target-fill" style="width:58%;background:linear-gradient(90deg,#9370DB,#A78BFA)"></div></div>
                     </div>
                 </div>
                 <div class="col-md-6 col-xl-3">
@@ -315,7 +316,7 @@
                         <h6 class="fw-semibold mb-3">Pengunjung</h6>
                         <div class="d-flex justify-content-between mb-2">
                             <span class="text-sm">Hari Ini</span>
-                            <span class="fw-bold text-biruNeon">1.842</span>
+                            <span class="fw-bold text-biruGrafik">1.842</span>
                         </div>
                         <div class="d-flex justify-content-between mb-2">
                             <span class="text-sm">Online</span>
@@ -330,7 +331,7 @@
                         <div class="text-xs space-y-2">
                             <div class="d-flex gap-2"><i class="bi bi-check-circle text-sukses"></i> Proyek selesai</div>
                             <div class="d-flex gap-2"><i class="bi bi-clock text-peringatan"></i> Pembayaran diproses</div>
-                            <div class="d-flex gap-2"><i class="bi bi-person-plus text-biruNeon"></i> Pelanggan baru</div>
+                            <div class="d-flex gap-2"><i class="bi bi-person-plus text-biruGrafik"></i> Pelanggan baru</div>
                         </div>
                     </div>
                 </div>
@@ -349,7 +350,7 @@
                     </div>
                 </div>
                 <div class="col-md-6 col-xl-4">
-                    <div class="glass-card h-100 border-2 border-biruNeon">
+                    <div class="glass-card h-100 border-2 border-biruGrafik">
                         <h4 class="fw-bold mb-2">Profesional</h4>
                         <p class="text-abuLunak mb-3">Paling populer</p>
                         <p class="stat-number mb-4">Rp 249.000<span class="text-sm fw-normal">/bulan</span></p>
@@ -435,6 +436,7 @@ document.querySelectorAll('.tab-link').forEach(link=>{
     });
 });
 
+let grafikPendapatan = null;
 function initDashboard(){
     let val1=0, val2=0, val3=0, val4=0;
     const anim = setInterval(()=>{
@@ -449,27 +451,112 @@ function initDashboard(){
         if(val1>=875000 && val2>=124 && val3>=356 && val4>=94.7) clearInterval(anim);
     }, 40);
 
-    const opt = {
-        responsive:true, maintainAspectRatio:false,
-        plugins:{legend:{labels:{color:'#94A3B8'}}, crosshair:{color:'#00D4FF'}},
-        scales:{x:{ticks:{color:'#94A3B8'}, grid:{color:'rgba(255,255,255,0.05)'}}, y:{ticks:{color:'#94A3B8'}, grid:{color:'rgba(255,255,255,0.05)'}}},
-        animation:{duration:1500, easing:'easeOutQuart'}
+    const optGaris = {
+        responsive: true,
+        maintainAspectRatio: false,
+        layout: { padding: { top: 30, right: 30, bottom: 20, left: 20 } },
+        plugins: {
+            legend: {
+                display: true,
+                position: 'top',
+                align: 'center',
+                labels: {
+                    color: '#94A3B8',
+                    font: { size: 15, weight: '500' },
+                    boxWidth: 30,
+                    padding: 20
+                }
+            },
+            tooltip: {
+                backgroundColor: 'rgba(10,15,30,0.95)',
+                borderColor: '#00BFFF',
+                borderWidth: 1,
+                titleColor: '#00BFFF',
+                bodyColor: '#F1F5F9',
+                padding: 14,
+                cornerRadius: 12
+            }
+        },
+        scales: {
+            x: {
+                grid: { color: 'rgba(255,255,255,0.08)', drawBorder: false, lineWidth:1 },
+                ticks: { color: '#94A3B8', font: { size: 14, weight:'500' } }
+            },
+            y: {
+                min: 400000,
+                max: 1100000,
+                stepSize: 100000,
+                grid: { color: 'rgba(255,255,255,0.08)', drawBorder: false, lineWidth:1 },
+                ticks: {
+                    color: '#94A3B8',
+                    font: { size: 14, weight:'500' },
+                    callback: function(nilai) {
+                        return nilai.toLocaleString('id-ID');
+                    }
+                }
+            }
+        },
+        elements: {
+            line: { tension: 0.3, borderWidth: 4, borderColor: '#00BFFF' },
+            point: { radius: 7, backgroundColor: '#00BFFF', borderColor: '#ffffff', borderWidth: 2 }
+        },
+        animation: { duration: 1200, easing: 'easeOutQuart' }
     };
-    new Chart(document.getElementById('chartPendapatan'),{
-        type:'line',
-        data:{labels:['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Ags'],datasets:[{label:'Pendapatan',data:[450000,520000,610000,580000,740000,890000,950000,1100000],borderColor:'#00D4FF',backgroundColor:'rgba(0,212,255,0.1)',tension:0.4,fill:true}]},
-        options:opt
+
+    if(grafikPendapatan) grafikPendapatan.destroy();
+    grafikPendapatan = new Chart(document.getElementById('chartPendapatan'),{
+        type: 'line',
+        data: {
+            labels: ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Ags'],
+            datasets: [{
+                label: 'Pendapatan',
+                data: [450000, 520000, 610000, 580000, 740000, 890000, 950000, 1100000],
+                backgroundColor: 'rgba(0,191,255,0.12)',
+                fill: true
+            }]
+        },
+        options: optGaris
     });
+
     new Chart(document.getElementById('chartDistribusi'),{
         type:'doughnut',
-        data:{labels:['Web','Desain','Keamanan','Lainnya'],datasets:[{data:[45,25,20,10],backgroundColor:['#00D4FF','#8B5CF6','#10B981','#F59E0B']}]},
-        options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'bottom',labels:{color:'#94A3B8'}}}}
+        data:{
+            labels:['Web','Desain','Keamanan','Lainnya'],
+            datasets:[{
+                data:[45,25,20,10],
+                backgroundColor:['#00BFFF','#9370DB','#00B398','#FF9F43'],
+                borderColor:'#ffffff',
+                borderWidth:2
+            }]
+        },
+        options:{
+            responsive:true,
+            maintainAspectRatio:false,
+            cutout:'60%',
+            plugins:{
+                legend:{
+                    position:'bottom',
+                    labels:{
+                        color:'#94A3B8',
+                        font:{size:15, weight:'500'},
+                        boxWidth:30,
+                        padding:18
+                    }
+                }
+            }
+        }
     });
 
     setInterval(()=>{
         const el = document.getElementById('pendapatanHari');
         el.textContent = (Math.floor(Math.random()*50000)+850000).toLocaleString('id-ID');
-    }, 8000);
+        if(grafikPendapatan){
+            const dataBaru = grafikPendapatan.data.datasets[0].data.slice(1);
+            dataBaru.push(Math.floor(500000 + Math.random() * 450000));
+            grafikPendapatan.data.datasets[0].data = dataBaru;
+            grafikPendapatan.update('normal');
+        }
+    }, 10000);
 }
 setTimeout(initDashboard, 1000);
 
