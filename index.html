@@ -63,11 +63,12 @@
         .glass { background:rgba(15,23,42,0.6); backdrop-filter:blur(16px); border:1px solid rgba(255,255,255,0.08); }
         .glass-card { 
             background:rgba(15,23,42,0.5); backdrop-filter:blur(14px); border-radius:24px; padding:1.75rem; 
-            border:1px solid rgba(255,255,255,0.1); transition:all 0.4s ease;
+            border:1px solid rgba(0,191,255,0.3); transition:all 0.4s ease;
+            box-shadow:0 0 25px rgba(0,191,255,0.1);
         }
         .glass-card:hover { 
-            transform:translateY(-5px); box-shadow:0 15px 35px rgba(0,191,255,0.15);
-            border-color:rgba(0,191,255,0.3);
+            transform:translateY(-5px); box-shadow:0 15px 35px rgba(0,191,255,0.2);
+            border-color:rgba(0,191,255,0.5);
         }
         .live-badge { display:inline-flex; align-items:center; gap:0.3rem; padding:0.25rem 0.6rem; border-radius:999px; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); font-size:0.75rem; font-weight:600; color:#10B981; }
         .live-dot { width:6px; height:6px; border-radius:50%; background:#10B981; animation:liveBlink 1.5s ease-in-out infinite; box-shadow:0 0 8px rgba(16,185,129,0.6); }
@@ -88,8 +89,8 @@
         @keyframes fadeIn { from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
         .input-custom { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.15); color:#F1F5F9; border-radius:12px; padding:0.7rem 1rem; width:100%; }
         .input-custom:focus { background:rgba(255,255,255,0.08); border-color:#00BFFF; outline:none; box-shadow:0 0 12px rgba(0,191,255,0.25); }
-        .chart-wrap { position:relative; height:380px; width:100%; }
-        .chart-wrap-doughnut { position:relative; height:320px; width:100%; }
+        .chart-wrap { position:relative; height:420px; width:100%; padding:1rem; }
+        .chart-wrap-doughnut { position:relative; height:350px; width:100%; padding:1rem; }
         .progress-ring { position:relative; width:50px; height:50px; flex-shrink:0; }
         .progress-ring svg { transform:rotate(-90deg); width:100%; height:100%; }
         .progress-ring circle { fill:none; stroke-width:4; }
@@ -113,7 +114,7 @@
         .cal-day { padding:0.5rem; text-align:center; border-radius:8px; transition:all 0.2s ease; cursor:pointer; }
         .cal-day:hover { background:rgba(0,191,255,0.1); color:#00BFFF; }
         .cal-day.today { background:linear-gradient(135deg,#00BFFF,#9370DB); color:white; font-weight:600; }
-        @media (max-width:768px) { .stat-number{font-size:1.6rem;} .chart-wrap{height:300px;} .chart-wrap-doughnut{height:260px;} .container-fluid{padding:1rem;} }
+        @media (max-width:768px) { .stat-number{font-size:1.6rem;} .chart-wrap{height:340px;} .chart-wrap-doughnut{height:280px;} .container-fluid{padding:1rem;} }
     </style>
 </head>
 <body class="dark">
@@ -278,7 +279,7 @@
             <div class="row g-4 mb-4">
                 <div class="col-xl-8">
                     <div class="glass-card">
-                        <h3 class="fw-bold mb-4 text-xl">Grafik Pendapatan Bulanan</h3>
+                        <h3 class="fw-bold mb-4 text-xl">Grafik Pendapatan Mingguan</h3>
                         <div class="chart-wrap"><canvas id="chartPendapatan"></canvas></div>
                     </div>
                 </div>
@@ -454,17 +455,17 @@ function initDashboard(){
     const optGaris = {
         responsive: true,
         maintainAspectRatio: false,
-        layout: { padding: { top: 30, right: 30, bottom: 20, left: 20 } },
+        layout: { padding: { top: 20, right: 20, bottom: 20, left: 5 } },
         plugins: {
             legend: {
                 display: true,
                 position: 'top',
-                align: 'center',
+                align: 'start',
                 labels: {
                     color: '#94A3B8',
-                    font: { size: 15, weight: '500' },
-                    boxWidth: 30,
-                    padding: 20
+                    font: { size: 18, weight: '600' },
+                    boxWidth: 32,
+                    padding: 30
                 }
             },
             tooltip: {
@@ -479,17 +480,23 @@ function initDashboard(){
         },
         scales: {
             x: {
-                grid: { color: 'rgba(255,255,255,0.08)', drawBorder: false, lineWidth:1 },
-                ticks: { color: '#94A3B8', font: { size: 14, weight:'500' } }
+                grid: { color: 'rgba(255,255,255,0.15)', drawBorder: false, lineWidth:1 },
+                ticks: {
+                    color: '#94A3B8',
+                    font: { size: 16, weight:'500' },
+                    maxRotation: 0,
+                    minRotation: 0,
+                    align: 'center'
+                }
             },
             y: {
                 min: 400000,
                 max: 1100000,
                 stepSize: 100000,
-                grid: { color: 'rgba(255,255,255,0.08)', drawBorder: false, lineWidth:1 },
+                grid: { color: 'rgba(255,255,255,0.15)', drawBorder: false, lineWidth:1 },
                 ticks: {
                     color: '#94A3B8',
-                    font: { size: 14, weight:'500' },
+                    font: { size: 16, weight:'500' },
                     callback: function(nilai) {
                         return nilai.toLocaleString('id-ID');
                     }
@@ -497,8 +504,14 @@ function initDashboard(){
             }
         },
         elements: {
-            line: { tension: 0.3, borderWidth: 4, borderColor: '#00BFFF' },
-            point: { radius: 7, backgroundColor: '#00BFFF', borderColor: '#ffffff', borderWidth: 2 }
+            line: { tension: 0.3, borderWidth: 6, borderColor: '#00BFFF' },
+            point: {
+                radius: 8,
+                backgroundColor: '#020617',
+                borderColor: '#ffffff',
+                borderWidth: 4,
+                hoverRadius: 10
+            }
         },
         animation: { duration: 1200, easing: 'easeOutQuart' }
     };
@@ -507,11 +520,11 @@ function initDashboard(){
     grafikPendapatan = new Chart(document.getElementById('chartPendapatan'),{
         type: 'line',
         data: {
-            labels: ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Ags'],
+            labels: ['Sen','Sel','Rab','Kam','Jum','Sab','Min','Minggu'],
             datasets: [{
                 label: 'Pendapatan',
-                data: [950000, 900000, 850000, 972000, 694000, 890000, 950000, 1100000],
-                backgroundColor: 'rgba(0,191,255,0.12)',
+                data: [420000, 430000, 440000, 435000, 450000, 470000, 485000, 500000],
+                backgroundColor: 'rgba(0,191,255,0.2)',
                 fill: true
             }]
         },
@@ -526,39 +539,29 @@ function initDashboard(){
                 data:[45,25,20,10],
                 backgroundColor:['#00BFFF','#9370DB','#00B398','#FF9F43'],
                 borderColor:'#ffffff',
-                borderWidth:2
+                borderWidth:3,
+                hoverBorderWidth:4
             }]
         },
         options:{
             responsive:true,
             maintainAspectRatio:false,
-            cutout:'60%',
+            cutout:'55%',
             plugins:{
                 legend:{
                     position:'bottom',
                     labels:{
                         color:'#94A3B8',
-                        font:{size:15, weight:'500'},
-                        boxWidth:30,
-                        padding:18
+                        font:{size:16, weight:'500'},
+                        boxWidth:28,
+                        padding:20
                     }
                 }
             }
         }
     });
-
-    setInterval(()=>{
-        const el = document.getElementById('pendapatanHari');
-        el.textContent = (Math.floor(Math.random()*50000)+850000).toLocaleString('id-ID');
-        if(grafikPendapatan){
-            const dataBaru = grafikPendapatan.data.datasets[0].data.slice(1);
-            dataBaru.push(Math.floor(500000 + Math.random() * 450000));
-            grafikPendapatan.data.datasets[0].data = dataBaru;
-            grafikPendapatan.update('normal');
-        }
-    }, 10000);
 }
-setTimeout(initDashboard, 1000);
+setTimeout(initDashboard, 800);
 
 document.getElementById('refreshBtn').addEventListener('click', ()=>{
     loadScreen.classList.remove('hidden');
