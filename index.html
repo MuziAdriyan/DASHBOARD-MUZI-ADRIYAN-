@@ -550,16 +550,46 @@ td.mono, th.num{text-align:right;}
               <div class="tf-group" id="tfGroup"></div>
               <span class="sub" style="font-size:11px;color:var(--text-faint)" id="lastUpdateTxt">Last update: -</span>
             </div>
-            <div class="chart-wrap">
-              <div id="candleChart"></div>
-              <div id="volumeChart"></div>
-              <div class="chart-loading" id="chartLoading"><div class="spinner"></div><small>Memuat data candlestick...</small></div>
-              <div class="chart-err" id="chartErr">
-                <b>Gagal memuat data pasar</b>
-                <span id="chartErrMsg">Tidak dapat terhubung ke Binance API.</span>
-                <button class="pill-btn" id="chartRetryBtn">Coba lagi</button>
-              </div>
-            </div>
+           <div class="chart-wrap">
+  <!-- TradingView Widget BEGIN -->
+  <div class="tradingview-widget-container" style="height:100%;width:100%">
+    <div class="tradingview-widget-container__widget" style="height:calc(100% - 32px);width:100%"></div>
+    <div class="tradingview-widget-copyright">
+      <a href="https://www.tradingview.com/symbols/BINANCE-BTCUSDT/" rel="noopener nofollow" target="_blank">
+        <span class="blue-text">Grafik BTC/USDT</span>
+      </a>
+      <span class="trademark"> by TradingView</span>
+    </div>
+    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
+    {
+      "allow_symbol_change": true,
+      "calendar": false,
+      "details": false,
+      "hide_side_toolbar": true,
+      "hide_top_toolbar": false,
+      "hide_legend": false,
+      "hide_volume": false,
+      "hotlist": false,
+      "interval": "D",
+      "locale": "id",
+      "save_image": true,
+      "style": "1",
+      "symbol": "BINANCE:BTCUSDT",
+      "theme": "dark",
+      "timezone": "Asia/Jakarta",
+      "backgroundColor": "#0f172a",
+      "gridColor": "rgba(59, 130, 246, 0.15)",
+      "watchlist": ["BINANCE:BTCUSDT","BINANCE:ETHUSDT","BINANCE:SOLUSDT","BINANCE:BNBUSDT","BINANCE:XRPUSDT"],
+      "withdateranges": false,
+      "compareSymbols": [],
+      "support_host": "https://www.tradingview.com",
+      "studies": [],
+      "autosize": true
+    }
+    </script>
+  </div>
+  <!-- TradingView Widget END -->
+</div>
           </div>
 
           <div class="panel">
@@ -1097,70 +1127,20 @@ async function loadHistoryAndReconnect(){
   }
 }
 
-/* ============================================================
-   WEBSOCKET (combined stream: 5x ticker + 1x kline)
-============================================================ */
-function buildStreamList(){
-  const tickers = PAIRS.map(p=> p.sym.toLowerCase()+"@ticker");
-  const kline = state.pair.toLowerCase()+"@kline_"+state.interval;
-  return tickers.concat([kline]);
-}
-function connectSocket(){
-  if(state.ws){ try{ state.ws.onclose=null; state.ws.close(); }catch(e){} }
-  setConnStatus("connecting");
-  const streams = buildStreamList().join("/");
-  const url = "wss://stream.binance.com:9443/stream?streams="+streams;
-  let sock;
-  try{ sock = new WebSocket(url); } catch(e){ handleSocketDown(); return; }
-  state.ws = sock;
-
-  sock.onopen = ()=>{
-    state.wsConnected = true; state.wsRetry = 0;
-    setConnStatus("live");
-    pushActivity("Koneksi WebSocket Binance tersambung", "success");
-  };
-  sock.onmessage = (evt)=>{
-    let msg; try{ msg = JSON.parse(evt.data); }catch(e){ return; }
-    if(!msg || !msg.stream || !msg.data) return;
-    if(msg.stream.endsWith("@ticker")) handleTicker(msg.data);
-    else if(msg.stream.indexOf("@kline_")!==-1) handleKline(msg.data);
-  };
-  sock.onerror = ()=>{ /* onclose will handle reconnect */ };
-  sock.onclose = ()=>{
-    if(state.wsConnected){ pushActivity("Koneksi API terputus — mencoba reconnect otomatis", "error"); }
-    state.wsConnected = false;
-    handleSocketDown();
-  };
-}
-function handleSocketDown(){
-  setConnStatus("down");
-  if(!state.autoReconnect) return;
-  state.wsRetry++;
-  const delay = Math.min(1000 * Math.pow(1.6, state.wsRetry), 15000);
-  setTimeout(()=>{ if(state.autoReconnect) connectSocket(); }, delay);
-}
-
-let lastMsgServerTime = null;
-function handleTicker(d){
-  const sym = d.s;
-  lastMsgServerTime = d.E;
-  const prevPrice = state.tickers[sym] ? state.tickers[sym].price : null;
-  state.tickers[sym] = {
-    price: parseFloat(d.c), changePct: parseFloat(d.P), high: parseFloat(d.h), low: parseFloat(d.l),
-    volume: parseFloat(d.v), quoteVolume: parseFloat(d.q), openPrice: parseFloat(d.o), serverTime: d.E,
-    dir: prevPrice!==null ? (parseFloat(d.c) > prevPrice ? "up" : parseFloat(d.c) < prevPrice ? "down" : null) : null,
-  };
-  $("#lastUpdateTxt").textContent = "Last update: " + new Date().toLocaleTimeString("id-ID",{hour12:false});
-  renderTickerDependentUI(sym);
-}
-function handleKline(d){
-  const k = d.k;
-  const candle = { time: Math.floor(k.t/1000), open: parseFloat(k.o), high: parseFloat(k.h), low: parseFloat(k.l), close: parseFloat(k.c), volume: parseFloat(k.v) };
-  state.candleSeries.update({time:candle.time, open:candle.open, high:candle.high, low:candle.low, close:candle.close});
-  state.volumeSeries.update({time:candle.time, value:candle.volume, color: candle.close>=candle.open?"rgba(34,197,94,0.55)":"rgba(240,70,75,0.55)"});
-  state.currentCandle = candle;
-  setOHLC(candle.open, candle.high, candle.low, candle.close, candle.volume);
-  if(k.x){ pushActivity("Candle baru terbentuk "+pairMeta(state.pair).base+"/USDT ("+state.interval+")", "info"); }
+   async function loadHistoryAndReconnect(){
+  showChartLoading(true);
+  showChartError(false);
+  try {
+    connectSocket();
+    setTimeout(() => {
+      showChartLoading(false);
+      pushActivity("Grafik & data pasar dimuat", "success");
+    }, 1500);
+  } catch(err) {
+    showChartLoading(false);
+    showChartError(true, "Gagal memuat data: " + err.message);
+    pushActivity("Gagal memuat data pasar: " + err.message, "error");
+  }
 }
 
 /* ============================================================
