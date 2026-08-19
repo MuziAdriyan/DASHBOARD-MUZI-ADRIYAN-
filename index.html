@@ -1,572 +1,1432 @@
 <!DOCTYPE html>
-<html lang="id" class="scroll-smooth">
+<html lang="id" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NexaCore • Premium Admin Dashboard 2026</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-crosshair@2.0.0/dist/chartjs-plugin-crosshair.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        biruGrafik: '#00BFFF',
-                        unguGrafik: '#9370DB',
-                        hijauGrafik: '#00B398',
-                        oranyeGrafik: '#FF9F43',
-                        gelapUtama: '#020617',
-                        gelapSekunder: '#0F172A',
-                        putihLunak: '#F1F5F9',
-                        abuLunak: '#94A3B8',
-                        sukses: '#10B981',
-                        peringatan: '#F59E0B',
-                        bahaya: '#EF4444'
-                    },
-                    animation: {
-                        'pulse-glow': 'pulseGlow 2s ease-in-out infinite',
-                        'live-blink': 'liveBlink 1.5s ease-in-out infinite'
-                    },
-                    keyframes: {
-                        pulseGlow: {
-                            '0%,100%': { boxShadow: '0 0 15px rgba(0,191,255,0.3)' },
-                            '50%': { boxShadow: '0 0 30px rgba(0,191,255,0.5)' }
-                        },
-                        liveBlink: {
-                            '0%,100%': { opacity: '1' },
-                            '50%': { opacity: '0.3' }
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        * { margin:0; padding:0; box-sizing:border-box; font-family:'Inter',sans-serif; }
-        html,body { min-height:100vh; overflow-x:hidden; }
-        body.dark { 
-            background: 
-                radial-gradient(circle at 10% 0%, rgba(0,191,255,0.1) 0%, transparent 40%),
-                radial-gradient(circle at 90% 90%, rgba(147,112,219,0.1) 0%, transparent 40%),
-                linear-gradient(180deg, #020617 0%, #0F172A 100%);
-            color:#F1F5F9;
-        }
-        #loadingScreen { position:fixed; inset:0; z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#020617; transition:opacity 1s ease, visibility 1s ease; }
-        #loadingScreen.hidden { opacity:0; visibility:hidden; }
-        .glass { background:rgba(15,23,42,0.6); backdrop-filter:blur(16px); border:1px solid rgba(255,255,255,0.08); }
-        .glass-card { 
-            background:rgba(15,23,42,0.5); backdrop-filter:blur(14px); border-radius:24px; padding:1.75rem; 
-            border:1px solid rgba(0,191,255,0.3); transition:all 0.4s ease;
-            box-shadow:0 0 25px rgba(0,191,255,0.1);
-        }
-        .glass-card:hover { 
-            transform:translateY(-5px); box-shadow:0 15px 35px rgba(0,191,255,0.2);
-            border-color:rgba(0,191,255,0.5);
-        }
-        .live-badge { display:inline-flex; align-items:center; gap:0.3rem; padding:0.25rem 0.6rem; border-radius:999px; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); font-size:0.75rem; font-weight:600; color:#10B981; }
-        .live-dot { width:6px; height:6px; border-radius:50%; background:#10B981; animation:liveBlink 1.5s ease-in-out infinite; box-shadow:0 0 8px rgba(16,185,129,0.6); }
-        .sidebar { position:fixed; left:0; top:0; height:100vh; width:270px; transform:translateX(-100%); transition:transform 0.4s ease; z-index:50; }
-        .sidebar.open { transform:translateX(0); }
-        .main-content { margin-left:0; transition:margin-left 0.4s ease; }
-        @media (min-width:1024px) { .sidebar{transform:translateX(0);} .main-content{margin-left:270px;} }
-        .overlay { position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:49; opacity:0; visibility:hidden; transition:all 0.3s ease; }
-        .overlay.active { opacity:1; visibility:visible; }
-        .text-gradient { background:linear-gradient(90deg,#00BFFF,#9370DB); -webkit-background-clip:text; background-clip:text; color:transparent; }
-        .stat-number { font-variant-numeric:tabular-nums; font-weight:800; font-size:2rem; }
-        .btn-primary-custom { background:linear-gradient(135deg,#00BFFF,#9370DB); color:white; border:none; border-radius:14px; padding:0.7rem 1.4rem; font-weight:600; transition:all 0.3s ease; }
-        .btn-primary-custom:hover { transform:translateY(-2px); box-shadow:0 0 30px rgba(0,191,255,0.4); color:white; }
-        .btn-outline-custom { background:transparent; border:1px solid #00BFFF; color:#00BFFF; border-radius:14px; padding:0.7rem 1.4rem; font-weight:600; transition:all 0.3s ease; }
-        .btn-outline-custom:hover { background:rgba(0,191,255,0.1); }
-        .tab-content { display:none; }
-        .tab-content.active { display:block; animation:fadeIn 0.4s ease; }
-        @keyframes fadeIn { from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
-        .input-custom { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.15); color:#F1F5F9; border-radius:12px; padding:0.7rem 1rem; width:100%; }
-        .input-custom:focus { background:rgba(255,255,255,0.08); border-color:#00BFFF; outline:none; box-shadow:0 0 12px rgba(0,191,255,0.25); }
-        .chart-wrap { position:relative; height:420px; width:100%; padding:1rem; }
-        .chart-wrap-doughnut { position:relative; height:350px; width:100%; padding:1rem; }
-        .progress-ring { position:relative; width:50px; height:50px; flex-shrink:0; }
-        .progress-ring svg { transform:rotate(-90deg); width:100%; height:100%; }
-        .progress-ring circle { fill:none; stroke-width:4; }
-        .progress-ring .bg { stroke:rgba(255,255,255,0.1); }
-        .progress-ring .fill { stroke-linecap:round; stroke-dasharray:125.6; transition:stroke-dashoffset 1s ease; }
-        .trend-up { color:#10B981; display:flex; align-items:center; gap:0.2rem; font-size:0.85rem; font-weight:600; }
-        .trend-down { color:#EF4444; display:flex; align-items:center; gap:0.2rem; font-size:0.85rem; font-weight:600; }
-        .target-bar { height:4px; background:rgba(255,255,255,0.1); border-radius:999px; overflow:hidden; margin-top:0.5rem; }
-        .target-fill { height:100%; background:linear-gradient(90deg,#00BFFF,#9370DB); border-radius:999px; transition:width 1s ease; }
-        .modal-custom { background:rgba(15,23,42,0.95); backdrop-filter:blur(20px); border:1px solid rgba(0,191,255,0.3); border-radius:20px; color:#F1F5F9; }
-        .modal-custom .modal-header, .modal-custom .modal-footer { border-color:rgba(255,255,255,0.1); }
-        .table-custom { --bs-table-bg:transparent; --bs-table-color:#F1F5F9; --bs-table-border-color:rgba(255,255,255,0.1); }
-        .table-custom th { color:#00BFFF; font-weight:600; border-bottom:1px solid rgba(255,255,255,0.15); }
-        .table-custom td { border-bottom:1px solid rgba(255,255,255,0.08); vertical-align:middle; }
-        .table-custom tr:hover { background:rgba(0,191,255,0.05); }
-        .quick-action { display:flex; align-items:center; justify-content:center; width:44px; height:44px; border-radius:12px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); transition:all 0.3s ease; cursor:pointer; }
-        .quick-action:hover { background:rgba(0,191,255,0.1); border-color:#00BFFF; color:#00BFFF; transform:translateY(-3px); }
-        .server-dot { width:8px; height:8px; border-radius:50%; }
-        .server-dot.online { background:#10B981; box-shadow:0 0 10px rgba(16,185,129,0.6); }
-        .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:0.3rem; font-size:0.8rem; }
-        .cal-day { padding:0.5rem; text-align:center; border-radius:8px; transition:all 0.2s ease; cursor:pointer; }
-        .cal-day:hover { background:rgba(0,191,255,0.1); color:#00BFFF; }
-        .cal-day.today { background:linear-gradient(135deg,#00BFFF,#9370DB); color:white; font-weight:600; }
-        @media (max-width:768px) { .stat-number{font-size:1.6rem;} .chart-wrap{height:340px;} .chart-wrap-doughnut{height:280px;} .container-fluid{padding:1rem;} }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Muzi Adriyan — Market Terminal</title>
+<meta name="description" content="Real-time crypto admin dashboard & trading terminal">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
+<style>
+/* ============================================================
+   TOKENS
+============================================================ */
+:root{
+  --bg:#0a0a0b;
+  --bg-1:#111113;
+  --bg-2:#161618;
+  --glass:rgba(255,255,255,0.035);
+  --glass-strong:rgba(255,255,255,0.06);
+  --border:rgba(255,255,255,0.09);
+  --border-soft:rgba(255,255,255,0.05);
+  --text:#f2f2f3;
+  --text-dim:#9a9aa1;
+  --text-faint:#5c5c62;
+  --up:#22c55e;
+  --up-glow:rgba(34,197,94,0.18);
+  --down:#f0464b;
+  --down-glow:rgba(240,70,75,0.18);
+  --accent:#ffffff;
+  --radius-sm:8px;
+  --radius:14px;
+  --radius-lg:20px;
+  --shadow:0 20px 60px -20px rgba(0,0,0,0.6);
+  --font-ui:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+  --font-mono:'JetBrains Mono',ui-monospace,'SF Mono',monospace;
+  --sidebar-w:248px;
+  --header-h:68px;
+  --transition:200ms cubic-bezier(.4,0,.2,1);
+}
+html[data-theme="light"]{
+  --bg:#f7f7f8;
+  --bg-1:#ffffff;
+  --bg-2:#f0f0f1;
+  --glass:rgba(10,10,11,0.03);
+  --glass-strong:rgba(10,10,11,0.05);
+  --border:rgba(10,10,11,0.09);
+  --border-soft:rgba(10,10,11,0.06);
+  --text:#0e0e0f;
+  --text-dim:#6b6b72;
+  --text-faint:#a6a6ad;
+  --accent:#0a0a0b;
+  --shadow:0 20px 60px -20px rgba(0,0,0,0.15);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font-ui);
+  overflow-x:hidden;
+  transition:background var(--transition),color var(--transition);
+}
+::selection{background:var(--text);color:var(--bg);}
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:10px;}
+::-webkit-scrollbar-track{background:transparent;}
+button,input,select{font-family:inherit;color:inherit;}
+a{color:inherit;text-decoration:none;}
+.mono{font-family:var(--font-mono);font-variant-numeric:tabular-nums;letter-spacing:-0.01em;}
+.up{color:var(--up);}
+.down{color:var(--down);}
+:focus-visible{outline:2px solid var(--text);outline-offset:2px;}
+@media(prefers-reduced-motion:reduce){*{animation-duration:0.001ms!important;transition-duration:0.001ms!important;}}
+
+/* ============================================================
+   LAYOUT SHELL
+============================================================ */
+.app{display:flex;min-height:100vh;}
+
+/* ---- Sidebar ---- */
+.sidebar{
+  width:var(--sidebar-w);
+  flex-shrink:0;
+  background:var(--bg-1);
+  border-right:1px solid var(--border-soft);
+  display:flex;flex-direction:column;
+  position:fixed;top:0;left:0;bottom:0;
+  z-index:200;
+  transition:transform var(--transition);
+}
+.sidebar-brand{
+  height:var(--header-h);
+  display:flex;align-items:center;gap:11px;
+  padding:0 22px;border-bottom:1px solid var(--border-soft);
+}
+.brand-mark{
+  width:32px;height:32px;border-radius:9px;
+  background:linear-gradient(155deg,var(--text) 0%, var(--text-dim) 140%);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--bg);font-weight:800;font-size:14px;flex-shrink:0;
+}
+.brand-text{display:flex;flex-direction:column;line-height:1.15;}
+.brand-text b{font-size:13.5px;font-weight:700;letter-spacing:-0.01em;}
+.brand-text span{font-size:10.5px;color:var(--text-faint);letter-spacing:.06em;text-transform:uppercase;}
+
+.nav-scroll{flex:1;overflow-y:auto;padding:18px 12px;}
+.nav-group-label{
+  font-size:10.5px;color:var(--text-faint);letter-spacing:.09em;
+  text-transform:uppercase;padding:6px 12px 8px;margin-top:12px;font-weight:600;
+}
+.nav-group-label:first-child{margin-top:0;}
+.nav-item{
+  display:flex;align-items:center;gap:11px;
+  padding:10px 12px;border-radius:10px;
+  font-size:13.5px;font-weight:500;color:var(--text-dim);
+  cursor:pointer;transition:background var(--transition),color var(--transition);
+  margin-bottom:2px;position:relative;user-select:none;
+}
+.nav-item svg{width:17px;height:17px;flex-shrink:0;opacity:.85;}
+.nav-item:hover{background:var(--glass);color:var(--text);}
+.nav-item.active{background:var(--glass-strong);color:var(--text);}
+.nav-item.active::before{
+  content:'';position:absolute;left:-12px;top:50%;transform:translateY(-50%);
+  width:3px;height:16px;background:var(--text);border-radius:0 3px 3px 0;
+}
+.nav-badge{
+  margin-left:auto;font-size:10px;font-weight:700;background:var(--up-glow);
+  color:var(--up);padding:1px 6px;border-radius:20px;
+}
+
+.sidebar-foot{
+  padding:14px 16px;border-top:1px solid var(--border-soft);
+  display:flex;align-items:center;gap:10px;
+}
+.status-dot{width:7px;height:7px;border-radius:50%;background:var(--text-faint);flex-shrink:0;}
+.status-dot.live{background:var(--up);box-shadow:0 0 0 3px var(--up-glow);animation:pulseDot 2s infinite;}
+.status-dot.down{background:var(--down);box-shadow:0 0 0 3px var(--down-glow);}
+@keyframes pulseDot{0%,100%{opacity:1;}50%{opacity:.45;}}
+.sidebar-foot small{font-size:11px;color:var(--text-faint);}
+.sidebar-foot b{font-size:11.5px;font-weight:600;display:block;}
+
+.sidebar-scrim{display:none;}
+
+/* ---- Main column ---- */
+.main{margin-left:var(--sidebar-w);flex:1;min-width:0;display:flex;flex-direction:column;min-height:100vh;}
+
+/* ---- Header ---- */
+.topbar{
+  height:var(--header-h);flex-shrink:0;
+  display:flex;align-items:center;gap:16px;
+  padding:0 26px;border-bottom:1px solid var(--border-soft);
+  background:color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter:blur(14px);
+  position:sticky;top:0;z-index:100;
+}
+.burger{display:none;width:34px;height:34px;border-radius:9px;border:1px solid var(--border);background:var(--glass);align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;}
+.burger svg{width:16px;height:16px;}
+.page-title{display:flex;flex-direction:column;line-height:1.2;margin-right:6px;}
+.page-title h1{font-size:16.5px;font-weight:700;letter-spacing:-0.01em;}
+.page-title span{font-size:11.5px;color:var(--text-faint);}
+.search-wrap{
+  flex:1;max-width:340px;position:relative;display:flex;align-items:center;
+}
+.search-wrap svg{position:absolute;left:12px;width:14px;height:14px;color:var(--text-faint);pointer-events:none;}
+.search-wrap input{
+  width:100%;background:var(--glass);border:1px solid var(--border-soft);
+  border-radius:10px;padding:9px 12px 9px 34px;font-size:12.5px;color:var(--text);
+  transition:border-color var(--transition),background var(--transition);
+}
+.search-wrap input:focus{border-color:var(--border);background:var(--glass-strong);outline:none;}
+.search-wrap input::placeholder{color:var(--text-faint);}
+.topbar-right{display:flex;align-items:center;gap:8px;margin-left:auto;}
+.clock-box{
+  display:flex;flex-direction:column;align-items:flex-end;line-height:1.2;
+  padding-right:14px;margin-right:4px;border-right:1px solid var(--border-soft);
+}
+.clock-box b{font-size:13px;font-weight:600;}
+.clock-box span{font-size:10.5px;color:var(--text-faint);}
+.icon-btn{
+  width:36px;height:36px;border-radius:10px;border:1px solid var(--border-soft);
+  background:var(--glass);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;position:relative;transition:background var(--transition),border-color var(--transition);
+  flex-shrink:0;
+}
+.icon-btn:hover{background:var(--glass-strong);border-color:var(--border);}
+.icon-btn svg{width:16px;height:16px;}
+.ping{position:absolute;top:6px;right:7px;width:6px;height:6px;border-radius:50%;background:var(--down);border:1.5px solid var(--bg-1);}
+.user-chip{
+  display:flex;align-items:center;gap:9px;padding:5px 12px 5px 5px;border-radius:30px;
+  border:1px solid var(--border-soft);background:var(--glass);cursor:pointer;flex-shrink:0;
+}
+.user-chip .av{width:26px;height:26px;border-radius:50%;background:linear-gradient(155deg,var(--text),var(--text-dim));display:flex;align-items:center;justify-content:center;color:var(--bg);font-size:11px;font-weight:700;}
+.user-chip span{font-size:12px;font-weight:600;}
+
+/* dropdown panel (notifications) */
+.dropdown{
+  position:absolute;top:52px;right:26px;width:340px;max-width:88vw;
+  background:var(--bg-1);border:1px solid var(--border);border-radius:var(--radius);
+  box-shadow:var(--shadow);z-index:300;opacity:0;visibility:hidden;transform:translateY(-6px);
+  transition:opacity var(--transition),transform var(--transition),visibility var(--transition);
+  overflow:hidden;
+}
+.dropdown.open{opacity:1;visibility:visible;transform:translateY(0);}
+.dropdown-head{padding:14px 16px;border-bottom:1px solid var(--border-soft);display:flex;justify-content:space-between;align-items:center;}
+.dropdown-head b{font-size:13px;}
+.dropdown-head span{font-size:10.5px;color:var(--text-faint);cursor:pointer;}
+.dropdown-body{max-height:340px;overflow-y:auto;}
+.activity-row{display:flex;gap:10px;padding:11px 16px;border-bottom:1px solid var(--border-soft);}
+.activity-row:last-child{border-bottom:none;}
+.activity-dot{width:7px;height:7px;border-radius:50%;margin-top:5px;flex-shrink:0;}
+.activity-row .txt{flex:1;min-width:0;}
+.activity-row .txt p{font-size:12px;line-height:1.4;}
+.activity-row .txt time{font-size:10.5px;color:var(--text-faint);}
+
+/* ============================================================
+   CONTENT
+============================================================ */
+.content{padding:22px 26px 100px;flex:1;}
+.page{display:none;animation:fadeUp 400ms cubic-bezier(.4,0,.2,1);}
+.page.active{display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+.section-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px;}
+.section-head h2{font-size:15px;font-weight:700;letter-spacing:-0.01em;}
+.section-head p{font-size:12px;color:var(--text-faint);margin-top:2px;}
+.pill-btn{
+  font-size:11.5px;font-weight:600;padding:7px 13px;border-radius:9px;
+  border:1px solid var(--border);background:var(--glass);cursor:pointer;
+  display:flex;align-items:center;gap:6px;transition:background var(--transition);
+}
+.pill-btn:hover{background:var(--glass-strong);}
+.pill-btn svg{width:13px;height:13px;}
+
+/* ---- Card grid ---- */
+.card-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px;}
+.stat-card{
+  background:var(--bg-1);border:1px solid var(--border-soft);border-radius:var(--radius);
+  padding:17px 18px;position:relative;overflow:hidden;transition:border-color var(--transition),transform var(--transition);
+}
+.stat-card:hover{border-color:var(--border);transform:translateY(-2px);}
+.stat-card .top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;}
+.stat-card .icon{width:32px;height:32px;border-radius:9px;background:var(--glass);border:1px solid var(--border-soft);display:flex;align-items:center;justify-content:center;}
+.stat-card .icon svg{width:15px;height:15px;color:var(--text-dim);}
+.stat-card .delta{font-size:11px;font-weight:700;padding:3px 7px;border-radius:20px;display:flex;align-items:center;gap:3px;}
+.stat-card .delta svg{width:9px;height:9px;}
+.delta.pos{color:var(--up);background:var(--up-glow);}
+.delta.neg{color:var(--down);background:var(--down-glow);}
+.stat-card label{font-size:11.5px;color:var(--text-faint);font-weight:500;display:block;margin-bottom:6px;}
+.stat-card .value{font-size:21px;font-weight:700;font-family:var(--font-mono);letter-spacing:-0.02em;transition:color 400ms;}
+.stat-card .sub{font-size:11px;color:var(--text-faint);margin-top:5px;}
+.flash-up{animation:flashUp 700ms ease;}
+.flash-down{animation:flashDown 700ms ease;}
+@keyframes flashUp{0%{color:var(--up);}100%{color:var(--text);}}
+@keyframes flashDown{0%{color:var(--down);}100%{color:var(--text);}}
+
+/* ---- Panels (glass) ---- */
+.panel{
+  background:var(--bg-1);border:1px solid var(--border-soft);border-radius:var(--radius-lg);
+  overflow:hidden;
+}
+.panel-head{
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;
+  padding:16px 20px;border-bottom:1px solid var(--border-soft);
+}
+.panel-head h3{font-size:13.5px;font-weight:700;display:flex;align-items:center;gap:9px;}
+.panel-body{padding:18px 20px;}
+
+/* ---- Chart layout ---- */
+.chart-grid{display:grid;grid-template-columns:2.4fr 1fr;gap:14px;margin-bottom:22px;align-items:start;}
+.pair-select{display:flex;align-items:center;gap:9px;flex-wrap:wrap;}
+.pair-btn{
+  display:flex;align-items:center;gap:7px;padding:6px 11px 6px 7px;border-radius:9px;
+  border:1px solid var(--border-soft);background:var(--glass);cursor:pointer;font-size:12px;font-weight:600;
+  transition:all var(--transition);
+}
+.pair-btn .dot{width:20px;height:20px;border-radius:50%;background:var(--glass-strong);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;}
+.pair-btn.active{background:var(--text);color:var(--bg);border-color:var(--text);}
+.pair-btn.active .dot{background:rgba(0,0,0,0.15);}
+
+.price-hero{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;padding:16px 20px 4px;}
+.price-hero .big{font-size:30px;font-weight:700;font-family:var(--font-mono);letter-spacing:-0.02em;}
+.price-hero .chg{font-size:13px;font-weight:700;padding:4px 9px;border-radius:20px;}
+.price-live{
+  display:flex;align-items:center;gap:5px;font-size:10px;font-weight:700;letter-spacing:.05em;
+  color:var(--up);background:var(--up-glow);padding:3px 8px;border-radius:20px;margin-left:auto;
+}
+.price-live .d{width:6px;height:6px;border-radius:50%;background:var(--up);animation:pulseDot 1.6s infinite;}
+.price-live.off{color:var(--down);background:var(--down-glow);}
+.price-live.off .d{background:var(--down);}
+.ohlc-row{display:flex;gap:18px;padding:6px 20px 14px;flex-wrap:wrap;}
+.ohlc-row div{font-size:11.5px;color:var(--text-faint);}
+.ohlc-row b{color:var(--text);font-family:var(--font-mono);font-weight:600;margin-left:4px;}
+
+.tf-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 20px 14px;flex-wrap:wrap;}
+.tf-group{display:flex;gap:4px;background:var(--glass);padding:4px;border-radius:10px;border:1px solid var(--border-soft);}
+.tf-btn{
+  border:none;background:transparent;padding:6px 11px;border-radius:7px;font-size:11.5px;
+  font-weight:600;color:var(--text-dim);cursor:pointer;transition:all var(--transition);
+}
+.tf-btn.active{background:var(--text);color:var(--bg);}
+.chart-wrap{position:relative;width:100%;}
+#candleChart{width:100%;height:420px;}
+#volumeChart{width:100%;height:100px;border-top:1px solid var(--border-soft);}
+.chart-loading{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  flex-direction:column;gap:10px;background:var(--bg-1);z-index:5;transition:opacity 300ms;
+}
+.chart-loading.hide{opacity:0;pointer-events:none;}
+.spinner{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);border-top-color:var(--text);animation:spin 700ms linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.chart-loading small{font-size:11px;color:var(--text-faint);}
+.chart-err{position:absolute;inset:0;display:none;align-items:center;justify-content:center;flex-direction:column;gap:8px;background:var(--bg-1);z-index:6;padding:20px;text-align:center;}
+.chart-err.show{display:flex;}
+.chart-err b{font-size:12.5px;}
+.chart-err span{font-size:11px;color:var(--text-faint);max-width:280px;}
+.chart-err button{margin-top:4px;}
+
+/* side rail next to chart */
+.rail{display:flex;flex-direction:column;gap:14px;}
+.rail-item{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid var(--border-soft);}
+.rail-item:last-child{border-bottom:none;}
+.rail-item .l{display:flex;align-items:center;gap:9px;}
+.rail-item .l .dot{width:26px;height:26px;border-radius:8px;background:var(--glass);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;flex-shrink:0;}
+.rail-item .l div b{font-size:12px;display:block;}
+.rail-item .l div span{font-size:10px;color:var(--text-faint);}
+.rail-item .r{text-align:right;}
+.rail-item .r b{font-size:12px;font-family:var(--font-mono);display:block;}
+.rail-item .r span{font-size:10.5px;font-weight:700;}
+.mini-canvas{width:56px;height:24px;flex-shrink:0;}
+
+/* ---- Tables ---- */
+.table-scroll{width:100%;overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:640px;}
+thead th{
+  text-align:left;font-size:10.5px;color:var(--text-faint);text-transform:uppercase;
+  letter-spacing:.05em;font-weight:600;padding:0 14px 10px;white-space:nowrap;
+}
+tbody td{padding:12px 14px;border-top:1px solid var(--border-soft);vertical-align:middle;}
+tbody tr{transition:background var(--transition);}
+tbody tr:hover{background:var(--glass);}
+.coin-cell{display:flex;align-items:center;gap:10px;}
+.coin-cell .dot{width:28px;height:28px;border-radius:50%;background:var(--glass-strong);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0;}
+.coin-cell b{font-size:12.5px;display:block;}
+.coin-cell span{font-size:10.5px;color:var(--text-faint);}
+td.mono, th.num{text-align:right;}
+.tag{font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:20px;}
+.tag.buy{color:var(--up);background:var(--up-glow);}
+.tag.sell{color:var(--down);background:var(--down-glow);}
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;padding:0 20px 16px;}
+.filter-chip{
+  font-size:11.5px;font-weight:600;padding:6px 12px;border-radius:20px;border:1px solid var(--border-soft);
+  background:var(--glass);cursor:pointer;color:var(--text-dim);transition:all var(--transition);
+}
+.filter-chip.active{background:var(--text);color:var(--bg);border-color:var(--text);}
+.empty-row td{text-align:center;color:var(--text-faint);padding:34px 14px;font-size:12px;}
+
+/* ---- Grid 2col for portfolio/market layout ---- */
+.two-col{display:grid;grid-template-columns:1.5fr 1fr;gap:14px;margin-bottom:14px;align-items:start;}
+.stack{display:flex;flex-direction:column;gap:14px;}
+.mini-stat{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border-soft);}
+.mini-stat:last-child{border-bottom:none;}
+.mini-stat span{font-size:12px;color:var(--text-dim);}
+.mini-stat b{font-family:var(--font-mono);font-size:13px;}
+#allocChart{width:100%;height:220px;}
+.legend{display:flex;flex-direction:column;gap:9px;margin-top:12px;}
+.legend-row{display:flex;align-items:center;gap:8px;font-size:11.5px;}
+.legend-row .sq{width:9px;height:9px;border-radius:3px;flex-shrink:0;}
+.legend-row span{color:var(--text-dim);}
+.legend-row b{margin-left:auto;font-family:var(--font-mono);}
+
+.note-box{
+  display:flex;gap:10px;padding:12px 14px;background:var(--glass);border:1px dashed var(--border);
+  border-radius:10px;font-size:11.5px;color:var(--text-dim);line-height:1.5;margin-bottom:16px;
+}
+.note-box svg{width:15px;height:15px;flex-shrink:0;margin-top:1px;color:var(--text-faint);}
+
+/* ---- Settings ---- */
+.settings-row{display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-bottom:1px solid var(--border-soft);gap:16px;flex-wrap:wrap;}
+.settings-row:last-child{border-bottom:none;}
+.settings-row .l b{font-size:13px;display:block;margin-bottom:3px;}
+.settings-row .l span{font-size:11.5px;color:var(--text-faint);}
+.switch{width:42px;height:24px;border-radius:20px;background:var(--glass-strong);border:1px solid var(--border);position:relative;cursor:pointer;flex-shrink:0;}
+.switch::after{content:'';position:absolute;width:18px;height:18px;border-radius:50%;background:var(--text-dim);top:2px;left:2px;transition:transform var(--transition),background var(--transition);}
+.switch.on{background:var(--text);}
+.switch.on::after{transform:translateX(18px);background:var(--bg);}
+.seg{display:flex;gap:4px;background:var(--glass);padding:4px;border-radius:10px;border:1px solid var(--border-soft);}
+.seg button{border:none;background:transparent;padding:7px 14px;border-radius:7px;font-size:12px;font-weight:600;color:var(--text-dim);cursor:pointer;}
+.seg button.active{background:var(--text);color:var(--bg);}
+
+/* ---- Bottom mobile nav ---- */
+.bottom-nav{display:none;}
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+@media(max-width:1180px){
+  .card-grid{grid-template-columns:repeat(2,1fr);}
+  .chart-grid{grid-template-columns:1fr;}
+  .two-col{grid-template-columns:1fr;}
+}
+@media(max-width:860px){
+  .sidebar{transform:translateX(-100%);box-shadow:var(--shadow);}
+  .sidebar.open{transform:translateX(0);}
+  .sidebar-scrim{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:190;}
+  .sidebar-scrim.show{display:block;}
+  .main{margin-left:0;}
+  .burger{display:flex;}
+  .clock-box{display:none;}
+  .search-wrap{display:none;}
+  .content{padding:16px 14px 92px;}
+  .card-grid{grid-template-columns:repeat(2,1fr);gap:10px;}
+  .stat-card{padding:14px;}
+  .stat-card .value{font-size:17px;}
+  .price-hero .big{font-size:24px;}
+  #candleChart{height:300px;}
+  .dropdown{right:14px;left:14px;width:auto;}
+  .bottom-nav{
+    display:flex;position:fixed;left:0;right:0;bottom:0;height:64px;background:var(--bg-1);
+    border-top:1px solid var(--border-soft);z-index:150;padding-bottom:env(safe-area-inset-bottom);
+    backdrop-filter:blur(14px);
+  }
+  .bottom-nav button{
+    flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+    background:none;border:none;color:var(--text-faint);font-size:9.5px;font-weight:600;cursor:pointer;
+  }
+  .bottom-nav button svg{width:19px;height:19px;}
+  .bottom-nav button.active{color:var(--text);}
+}
+@media(max-width:520px){
+  .card-grid{grid-template-columns:1fr 1fr;}
+  .page-title span{display:none;}
+  .ohlc-row{gap:12px;}
+  .ohlc-row div{font-size:10.5px;}
+}
+</style>
 </head>
-<body class="dark">
-<div id="loadingScreen">
-    <div class="position-relative text-center">
-        <div class="w-72 h-2 rounded-full bg-white/15 overflow-hidden mb-3">
-            <div id="loadProgress" class="h-full rounded-full bg-gradient-to-r from-biruGrafik to-unguGrafik" style="width:0%"></div>
-        </div>
-        <div class="text-sm"><span id="loadPercent">0%</span> • <span id="loadStatus">Memuat sistem...</span></div>
+<body>
+
+<div class="app">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-mark">MA</div>
+      <div class="brand-text"><b>Muzi Adriyan</b><span>Market Terminal</span></div>
     </div>
-</div>
-<div class="overlay" id="sidebarOverlay"></div>
-<aside class="sidebar glass border-r border-white/10" id="mainSidebar">
-    <div class="p-4 border-b border-white/10">
-        <div class="d-flex align-items-center gap-3">
-            <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-biruGrafik to-unguGrafik flex items-center justify-center">
-                <i class="bi bi-lightning-charge text-white text-xl"></i>
-            </div>
-            <div>
-                <h5 class="fw-bold text-gradient mb-0">NexaCore</h5>
-                <p class="text-xs text-abuLunak mb-0">Admin Dashboard 2026</p>
-            </div>
-        </div>
-    </div>
-    <nav class="p-3">
-        <p class="text-xs text-abuLunak fw-semibold mb-2 px-2">MENU UTAMA</p>
-        <ul class="list-unstyled">
-            <li class="mb-1"><a href="#dashboard-analitik" class="d-flex align-items-center gap-3 p-3 rounded-xl text-white hover:bg-white/5 transition-all tab-link active" data-tab="dashboard-analitik"><i class="bi bi-grid text-lg"></i> Dashboard</a></li>
-            <li class="mb-1"><a href="#paket" class="d-flex align-items-center gap-3 p-3 rounded-xl text-abuLunak hover:bg-white/5 hover:text-biruGrafik transition-all tab-link" data-tab="paket"><i class="bi bi-gem text-lg"></i> Paket Layanan</a></li>
-            <li class="mb-1"><a href="#data" class="d-flex align-items-center gap-3 p-3 rounded-xl text-abuLunak hover:bg-white/5 hover:text-biruGrafik transition-all tab-link" data-tab="data"><i class="bi bi-table text-lg"></i> Data Master</a></li>
-            <li class="mb-1"><a href="#laporan" class="d-flex align-items-center gap-3 p-3 rounded-xl text-abuLunak hover:bg-white/5 hover:text-biruGrafik transition-all tab-link" data-tab="laporan"><i class="bi bi-file-earmark-bar-graph text-lg"></i> Laporan</a></li>
-            <li class="mb-1"><a href="#pengaturan" class="d-flex align-items-center gap-3 p-3 rounded-xl text-abuLunak hover:bg-white/5 hover:text-biruGrafik transition-all tab-link" data-tab="pengaturan"><i class="bi bi-gear text-lg"></i> Pengaturan</a></li>
-        </ul>
+    <nav class="nav-scroll">
+      <div class="nav-group-label">Menu</div>
+      <div class="nav-item active" data-page="dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+        <span>Overview</span>
+      </div>
+      <div class="nav-item" data-page="market">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 17l5-6 4 4 8-10"/><path d="M15 5h5v5"/></svg>
+        <span>Market</span>
+      </div>
+      <div class="nav-item" data-page="portfolio">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
+        <span>Portfolio</span>
+      </div>
+      <div class="nav-item" data-page="transactions">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 14h3"/></svg>
+        <span>Transaksi</span>
+      </div>
+      <div class="nav-group-label">Sistem</div>
+      <div class="nav-item" data-page="activity">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg>
+        <span>Log Aktivitas</span>
+        <span class="nav-badge" id="activityBadge">0</span>
+      </div>
+      <div class="nav-item" data-page="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.9l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.9-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.7 1.7 0 00-1-1.6 1.7 1.7 0 00-1.9.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.9 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1a1.7 1.7 0 001.5-1 1.7 1.7 0 00-.3-1.9l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.9.3H9a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.9-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.9V9a1.7 1.7 0 001.5 1h.1a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z"/></svg>
+        <span>Pengaturan</span>
+      </div>
     </nav>
-    <div class="absolute bottom-0 left-0 right-0 p-3 border-t border-white/10">
-        <div class="d-flex align-items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition-all">
-            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-biruGrafik to-unguGrafik flex items-center justify-center text-white fw-bold">M</div>
-            <div class="flex-grow-1">
-                <h6 class="mb-0 fw-semibold">Muzi Adriyan</h6>
-                <p class="text-xs text-abuLunak mb-0">Admin Utama</p>
-                <div class="live-badge mt-1"><span class="live-dot"></span>Online</div>
-            </div>
-        </div>
+    <div class="sidebar-foot">
+      <span class="status-dot live" id="sidebarStatusDot"></span>
+      <div>
+        <b id="sidebarStatusText">Live</b>
+        <small id="sidebarStatusSub">Binance WebSocket</small>
+      </div>
     </div>
-</aside>
-<main class="main-content min-h-screen">
-    <header class="sticky top-0 glass border-b border-white/10 px-4 py-3 z-40">
-        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-            <div class="d-flex align-items-center gap-3">
-                <button class="d-lg-none btn btn-icon border border-white/20 rounded-circle p-2" id="toggleSidebar"><i class="bi bi-list fs-5"></i></button>
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb mb-0 bg-transparent p-0">
-                        <li class="breadcrumb-item"><a href="#" class="text-abuLunak">Dashboard Muzi Adriyan</a></li>
-                        <li class="breadcrumb-item active text-biruGrafik" aria-current="page">Admin</li>
-                    </ol>
-                </nav>
-            </div>
-            <div class="d-flex align-items-center gap-2 flex-wrap">
-                <div class="d-none d-md-flex align-items-center gap-2 text-sm">
-                    <i class="bi bi-thermometer-half text-biruGrafik"></i>
-                    <span>30°C • Cerah</span>
-                </div>
-                <div class="live-badge"><span class="live-dot"></span>LIVE</div>
-                <div class="text-end">
-                    <p class="mb-0 fw-semibold text-sm" id="currentDate"></p>
-                    <p class="text-gradient fw-bold" id="currentTime"></p>
-                </div>
-                <div class="d-flex gap-2">
-                    <button class="quick-action" title="Segarkan" id="refreshBtn"><i class="bi bi-arrow-clockwise"></i></button>
-                    <button class="quick-action" title="Ekspor"><i class="bi bi-download"></i></button>
-                    <button class="quick-action position-relative" title="Notifikasi">
-                        <i class="bi bi-bell"></i>
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger text-xs">12</span>
-                    </button>
-                </div>
-                <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" id="modeSwitch" checked>
-                    <label class="form-check-label" for="modeSwitch"><i class="bi bi-moon-stars"></i></label>
-                </div>
-            </div>
+  </aside>
+  <div class="sidebar-scrim" id="sidebarScrim"></div>
+
+  <!-- ============ MAIN ============ -->
+  <div class="main">
+    <header class="topbar">
+      <button class="burger" id="burgerBtn" aria-label="Menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+      <div class="page-title">
+        <h1 id="pageTitle">Dashboard Overview</h1>
+        <span id="pageSubtitle">Ringkasan portofolio & pasar real-time</span>
+      </div>
+      <div class="search-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input type="text" id="globalSearch" placeholder="Cari aset, pair, atau transaksi...">
+      </div>
+      <div class="topbar-right">
+        <div class="clock-box">
+          <b id="clockTime" class="mono">--:--:--</b>
+          <span id="clockDate">-</span>
         </div>
+        <button class="icon-btn" id="themeBtn" title="Ganti tema">
+          <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+        </button>
+        <button class="icon-btn" id="bellBtn" title="Notifikasi">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg>
+          <span class="ping" id="bellPing"></span>
+        </button>
+        <div class="user-chip">
+          <div class="av">MA</div>
+          <span>Muzi</span>
+        </div>
+      </div>
+
+      <div class="dropdown" id="notifDropdown">
+        <div class="dropdown-head"><b>Notifikasi</b><span id="notifClear">Tandai dibaca</span></div>
+        <div class="dropdown-body" id="notifList"></div>
+      </div>
     </header>
-    <div class="container-fluid p-4">
-        <div class="tab-content active" id="dashboard-analitik">
-            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-                <div>
-                    <h2 class="fw-bold mb-1">Ringkasan <span class="text-gradient">Analitik</span></h2>
-                    <p class="text-abuLunak mb-0">Data real-time • Sinkronisasi aktif</p>
-                </div>
-                <div class="d-flex gap-2">
-                    <select class="form-select bg-transparent text-white border border-white/20 w-auto">
-                        <option>7 Hari Terakhir</option>
-                        <option>30 Hari Terakhir</option>
-                    </select>
-                    <button class="btn-primary-custom btn-sm"><i class="bi bi-download me-2"></i>Laporan</button>
-                </div>
-            </div>
 
-            <div class="row g-4 mb-4">
-                <div class="col-md-6 col-xl-3">
-                    <div class="glass-card">
-                        <div class="d-flex justify-content-between align-items-start">
-                            <div>
-                                <p class="text-abuLunak mb-1 text-sm">Pendapatan Hari Ini</p>
-                                <p class="stat-number text-gradient">Rp <span id="pendapatanHari">0</span></p>
-                                <div class="trend-up"><i class="bi bi-arrow-up-right"></i> +12.5%</div>
-                                <div class="target-bar mt-2"><div class="target-fill" style="width:78%"></div></div>
-                            </div>
-                            <div class="progress-ring">
-                                <svg><circle class="bg" cx="25" cy="25" r="20"></circle><circle class="fill" cx="25" cy="25" r="20" style="stroke:#00BFFF;stroke-dashoffset:27.6"></circle></svg>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-xl-3">
-                    <div class="glass-card">
-                        <div class="d-flex justify-content-between align-items-start">
-                            <div>
-                                <p class="text-abuLunak mb-1 text-sm">Total Proyek</p>
-                                <p class="stat-number text-white"><span id="totalProyek">0</span></p>
-                                <div class="trend-up"><i class="bi bi-arrow-up-right"></i> +8.2%</div>
-                                <div class="target-bar mt-2"><div class="target-fill" style="width:65%"></div></div>
-                            </div>
-                            <div class="progress-ring">
-                                <svg><circle class="bg" cx="25" cy="25" r="20"></circle><circle class="fill" cx="25" cy="25" r="20" style="stroke:#9370DB;stroke-dashoffset:43.96"></circle></svg>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-xl-3">
-                    <div class="glass-card">
-                        <div class="d-flex justify-content-between align-items-start">
-                            <div>
-                                <p class="text-abuLunak mb-1 text-sm">Pelanggan Aktif</p>
-                                <p class="stat-number text-white"><span id="pelangganAktif">0</span></p>
-                                <div class="trend-down"><i class="bi bi-arrow-down-right"></i> -2.1%</div>
-                                <div class="target-bar mt-2"><div class="target-fill" style="width:92%"></div></div>
-                            </div>
-                            <div class="progress-ring">
-                                <svg><circle class="bg" cx="25" cy="25" r="20"></circle><circle class="fill" cx="25" cy="25" r="20" style="stroke:#00B398;stroke-dashoffset:10.05"></circle></svg>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-xl-3">
-                    <div class="glass-card">
-                        <div class="d-flex justify-content-between align-items-start">
-                            <div>
-                                <p class="text-abuLunak mb-1 text-sm">Tingkat Berhasil</p>
-                                <p class="stat-number text-sukses"><span id="tingkatBerhasil">0</span>%</p>
-                                <div class="trend-up"><i class="bi bi-arrow-up-right"></i> +1.8%</div>
-                                <div class="target-bar mt-2"><div class="target-fill" style="width:95%"></div></div>
-                            </div>
-                            <div class="progress-ring">
-                                <svg><circle class="bg" cx="25" cy="25" r="20"></circle><circle class="fill" cx="25" cy="25" r="20" style="stroke:#FF9F43;stroke-dashoffset:6.28"></circle></svg>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <main class="content">
 
-            <div class="row g-4 mb-4">
-                <div class="col-xl-8">
-                    <div class="glass-card">
-                        <h3 class="fw-bold mb-4 text-xl">Grafik Pendapatan Mingguan</h3>
-                        <div class="chart-wrap"><canvas id="chartPendapatan"></canvas></div>
-                    </div>
-                </div>
-                <div class="col-xl-4">
-                    <div class="glass-card h-100">
-                        <h3 class="fw-bold mb-4 text-xl">Distribusi Proyek</h3>
-                        <div class="chart-wrap-doughnut"><canvas id="chartDistribusi"></canvas></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row g-4">
-                <div class="col-md-6 col-xl-3">
-                    <div class="glass-card">
-                        <h6 class="fw-semibold mb-3">Status Sistem</h6>
-                        <div class="d-flex align-items-center gap-2 text-sm mb-2"><span class="server-dot online"></span> Server: Normal</div>
-                        <div class="d-flex justify-content-between text-sm mb-1">CPU <span>42%</span></div>
-                        <div class="target-bar mb-2"><div class="target-fill" style="width:42%"></div></div>
-                        <div class="d-flex justify-content-between text-sm mb-1">RAM <span>58%</span></div>
-                        <div class="target-bar"><div class="target-fill" style="width:58%;background:linear-gradient(90deg,#9370DB,#A78BFA)"></div></div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-xl-3">
-                    <div class="glass-card">
-                        <h6 class="fw-semibold mb-3">Kalender</h6>
-                        <div class="cal-grid">
-                            <div class="cal-day text-abuLunak">Min</div><div class="cal-day">Sen</div><div class="cal-day">Sel</div><div class="cal-day">Rab</div><div class="cal-day">Kam</div><div class="cal-day">Jum</div><div class="cal-day">Sab</div>
-                            <div class="cal-day text-abuLunak">27</div><div class="cal-day text-abuLunak">28</div><div class="cal-day text-abuLunak">29</div><div class="cal-day text-abuLunak">30</div><div class="cal-day text-abuLunak">31</div><div class="cal-day">1</div><div class="cal-day">2</div>
-                            <div class="cal-day today">3</div><div class="cal-day">4</div><div class="cal-day">5</div><div class="cal-day">6</div><div class="cal-day">7</div><div class="cal-day">8</div><div class="cal-day">9</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-xl-3">
-                    <div class="glass-card">
-                        <h6 class="fw-semibold mb-3">Pengunjung</h6>
-                        <div class="d-flex justify-content-between mb-2">
-                            <span class="text-sm">Hari Ini</span>
-                            <span class="fw-bold text-biruGrafik">1.842</span>
-                        </div>
-                        <div class="d-flex justify-content-between mb-2">
-                            <span class="text-sm">Online</span>
-                            <span class="fw-bold text-sukses">356</span>
-                        </div>
-                        <div class="text-xs text-abuLunak mt-2">Uptime: 99.97%</div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-xl-3">
-                    <div class="glass-card">
-                        <h6 class="fw-semibold mb-3">Aktivitas</h6>
-                        <div class="text-xs space-y-2">
-                            <div class="d-flex gap-2"><i class="bi bi-check-circle text-sukses"></i> Proyek selesai</div>
-                            <div class="d-flex gap-2"><i class="bi bi-clock text-peringatan"></i> Pembayaran diproses</div>
-                            <div class="d-flex gap-2"><i class="bi bi-person-plus text-biruGrafik"></i> Pelanggan baru</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+      <!-- ================= DASHBOARD ================= -->
+      <section class="page active" id="page-dashboard">
+        <div class="card-grid" id="statCards">
+          <!-- injected by JS -->
         </div>
 
-        <div class="tab-content" id="paket">
-            <h2 class="fw-bold mb-4">Pilih <span class="text-gradient">Paket Layanan</span></h2>
-            <div class="row g-4 justify-content-center">
-                <div class="col-md-6 col-xl-4">
-                    <div class="glass-card h-100">
-                        <h4 class="fw-bold mb-2">Dasar</h4>
-                        <p class="text-abuLunak mb-3">Cocok untuk pemula</p>
-                        <p class="stat-number mb-4">Rp 99.000<span class="text-sm fw-normal">/bulan</span></p>
-                        <button class="btn-outline-custom w-100">Pilih Paket</button>
-                    </div>
-                </div>
-                <div class="col-md-6 col-xl-4">
-                    <div class="glass-card h-100 border-2 border-biruGrafik">
-                        <h4 class="fw-bold mb-2">Profesional</h4>
-                        <p class="text-abuLunak mb-3">Paling populer</p>
-                        <p class="stat-number mb-4">Rp 249.000<span class="text-sm fw-normal">/bulan</span></p>
-                        <button class="btn-primary-custom w-100">Pilih Paket</button>
-                    </div>
-                </div>
-                <div class="col-md-6 col-xl-4">
-                    <div class="glass-card h-100">
-                        <h4 class="fw-bold mb-2">Perusahaan</h4>
-                        <p class="text-abuLunak mb-3">Solusi lengkap</p>
-                        <p class="stat-number mb-4">Rp 499.000<span class="text-sm fw-normal">/bulan</span></p>
-                        <button class="btn-outline-custom w-100">Pilih Paket</button>
-                    </div>
-                </div>
+        <div class="chart-grid">
+          <div class="panel">
+            <div class="pair-select" style="padding:16px 20px 0" id="pairSelect"></div>
+            <div class="price-hero">
+              <span class="big mono" id="heroPrice">$0.00</span>
+              <span class="chg mono" id="heroChg">0.00%</span>
+              <span class="price-live" id="liveTag"><span class="d"></span>LIVE</span>
             </div>
+            <div class="ohlc-row">
+              <div>O<b class="mono" id="ohlcO">-</b></div>
+              <div>H<b class="mono" id="ohlcH">-</b></div>
+              <div>L<b class="mono" id="ohlcL">-</b></div>
+              <div>C<b class="mono" id="ohlcC">-</b></div>
+              <div>Vol<b class="mono" id="ohlcV">-</b></div>
+            </div>
+            <div class="tf-row">
+              <div class="tf-group" id="tfGroup"></div>
+              <span class="sub" style="font-size:11px;color:var(--text-faint)" id="lastUpdateTxt">Last update: -</span>
+            </div>
+            <div class="chart-wrap">
+              <div id="candleChart"></div>
+              <div id="volumeChart"></div>
+              <div class="chart-loading" id="chartLoading"><div class="spinner"></div><small>Memuat data candlestick...</small></div>
+              <div class="chart-err" id="chartErr">
+                <b>Gagal memuat data pasar</b>
+                <span id="chartErrMsg">Tidak dapat terhubung ke Binance API.</span>
+                <button class="pill-btn" id="chartRetryBtn">Coba lagi</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head"><h3>Watchlist</h3><span style="font-size:10.5px;color:var(--text-faint)">Live</span></div>
+            <div class="panel-body rail" id="watchlistRail"></div>
+          </div>
         </div>
 
-        <div class="tab-content" id="data">
-            <h2 class="fw-bold mb-4">Manajemen <span class="text-gradient">Data Master</span></h2>
-            <div class="glass-card p-0 overflow-hidden">
-                <div class="p-4 border-b border-white/10 d-flex justify-content-between align-items-center flex-wrap gap-3">
-                    <input type="text" class="input-custom w-auto" placeholder="Cari data...">
-                    <button class="btn-primary-custom"><i class="bi bi-plus-lg me-2"></i>Tambah Data</button>
-                </div>
-                <div class="p-4 overflow-x-auto">
-                    <table class="table table-custom">
-                        <thead><tr><th>No</th><th>Nama</th><th>Kategori</th><th>Status</th><th>Aksi</th></tr></thead>
-                        <tbody>
-                            <tr><td>1</td><td>Website Portofolio</td><td>Pengembangan Web</td><td><span class="badge bg-sukses">Selesai</span></td><td><button class="btn btn-sm btn-outline-primary me-1">Ubah</button><button class="btn btn-sm btn-outline-danger">Hapus</button></td></tr>
-                            <tr><td>2</td><td>Sistem Keamanan</td><td>Keamanan</td><td><span class="badge bg-peringatan">Berjalan</span></td><td><button class="btn btn-sm btn-outline-primary me-1">Ubah</button><button class="btn btn-sm btn-outline-danger">Hapus</button></td></tr>
-                        </tbody>
-                    </table>
-                </div>
+        <div class="two-col">
+          <div class="panel">
+            <div class="panel-head"><h3>Top Gainers &amp; Losers (24h)</h3></div>
+            <div class="panel-body" style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+              <div id="gainersBox"></div>
+              <div id="losersBox"></div>
             </div>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><h3>Aktivitas Terbaru</h3></div>
+            <div class="panel-body" style="padding:0" id="dashActivityList"></div>
+          </div>
         </div>
+      </section>
 
-        <div class="tab-content" id="laporan"><h2 class="fw-bold mb-4">Laporan</h2><p class="text-abuLunak">Fitur sedang dimuat...</p></div>
-        <div class="tab-content" id="pengaturan"><h2 class="fw-bold mb-4">Pengaturan</h2><p class="text-abuLunak">Fitur sedang dimuat...</p></div>
-    </div>
-</main>
+      <!-- ================= MARKET ================= -->
+      <section class="page" id="page-market">
+        <div class="section-head">
+          <div><h2>Market Overview</h2><p>Harga real-time dari Binance untuk 5 pair utama</p></div>
+        </div>
+        <div class="panel">
+          <div class="filter-row" id="marketFilters" style="padding-top:16px">
+            <button class="filter-chip active" data-filter="all">Semua</button>
+            <button class="filter-chip" data-filter="gainers">Top Gainers</button>
+            <button class="filter-chip" data-filter="losers">Top Losers</button>
+            <button class="filter-chip" data-filter="volume">Volume Tertinggi</button>
+          </div>
+          <div class="table-scroll">
+            <table>
+              <thead><tr>
+                <th>Aset</th><th class="num">Harga</th><th class="num">24h %</th><th class="num">Tertinggi 24h</th><th class="num">Terendah 24h</th><th class="num">Volume (24h)</th><th>Tren</th>
+              </tr></thead>
+              <tbody id="marketTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= PORTFOLIO ================= -->
+      <section class="page" id="page-portfolio">
+        <div class="section-head">
+          <div><h2>Portfolio Analytics</h2><p>Dihitung dari harga live × kepemilikan contoh</p></div>
+        </div>
+        <div class="note-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+          <span>Dashboard ini statis (tanpa backend/akun), jadi jumlah kepemilikan aset di bawah adalah <b style="color:var(--text)">data contoh tetap</b>. Namun harga, nilai, dan persentase performa dihitung 100% dari harga pasar live Binance — bukan angka acak.</span>
+        </div>
+        <div class="card-grid" id="portfolioCards"></div>
+        <div class="two-col">
+          <div class="panel">
+            <div class="panel-head"><h3>Alokasi Portofolio</h3></div>
+            <div class="panel-body" style="display:flex;gap:20px;align-items:center;flex-wrap:wrap">
+              <canvas id="allocChart" style="max-width:220px"></canvas>
+              <div class="legend" id="allocLegend" style="flex:1;min-width:180px"></div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><h3>Kepemilikan Aset</h3></div>
+            <div class="panel-body" id="holdingsList" style="padding-top:6px"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TRANSACTIONS ================= -->
+      <section class="page" id="page-transactions">
+        <div class="section-head">
+          <div><h2>Riwayat Transaksi</h2><p>Contoh riwayat buy/sell (data statis demo)</p></div>
+          <button class="pill-btn" id="exportCsvBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v13m0 0l-4-4m4 4l4-4M4 20h16"/></svg>
+            Export CSV
+          </button>
+        </div>
+        <div class="panel">
+          <div class="table-scroll">
+            <table>
+              <thead><tr>
+                <th>Tanggal</th><th>Pair</th><th>Tipe</th><th class="num">Jumlah</th><th class="num">Harga</th><th class="num">Total</th><th>Status</th>
+              </tr></thead>
+              <tbody id="txTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= ACTIVITY LOG ================= -->
+      <section class="page" id="page-activity">
+        <div class="section-head">
+          <div><h2>Log Aktivitas Sistem</h2><p>Event live: koneksi, harga, dan status sistem</p></div>
+          <button class="pill-btn" id="clearLogBtn">Bersihkan</button>
+        </div>
+        <div class="panel">
+          <div class="panel-body" id="fullActivityList" style="padding:0"></div>
+        </div>
+      </section>
+
+      <!-- ================= SETTINGS ================= -->
+      <section class="page" id="page-settings">
+        <div class="section-head"><div><h2>Pengaturan</h2><p>Preferensi tampilan &amp; sistem</p></div></div>
+        <div class="panel">
+          <div class="panel-body">
+            <div class="settings-row">
+              <div class="l"><b>Tema Tampilan</b><span>Pilih mode gelap atau terang</span></div>
+              <div class="seg" id="themeSeg">
+                <button data-t="dark" class="active">Gelap</button>
+                <button data-t="light">Terang</button>
+              </div>
+            </div>
+            <div class="settings-row">
+              <div class="l"><b>Reconnect Otomatis</b><span>Sambungkan ulang WebSocket saat koneksi terputus</span></div>
+              <div class="switch on" id="autoReconnectSwitch"></div>
+            </div>
+            <div class="settings-row">
+              <div class="l"><b>Notifikasi Suara</b><span>Bunyi saat ada transaksi/event baru (belum aktif)</span></div>
+              <div class="switch" id="soundSwitch"></div>
+            </div>
+            <div class="settings-row">
+              <div class="l"><b>Status Koneksi</b><span id="settingsConnSub">Menyambungkan...</span></div>
+              <span class="tag buy" id="settingsConnTag">LIVE</span>
+            </div>
+            <div class="settings-row">
+              <div class="l"><b>Sumber Data</b><span>Binance WebSocket &amp; REST API, CoinGecko (market cap global)</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<nav class="bottom-nav" id="bottomNav">
+  <button data-page="dashboard" class="active">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+    Home
+  </button>
+  <button data-page="market">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M3 17l5-6 4 4 8-10"/><path d="M15 5h5v5"/></svg>
+    Market
+  </button>
+  <button data-page="portfolio">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
+    Wallet
+  </button>
+  <button data-page="transactions">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 14h3"/></svg>
+    Riwayat
+  </button>
+  <button data-page="settings">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.9"/></svg>
+    Setting
+  </button>
+</nav>
 
 <script>
-AOS.init({duration:800, once:true});
-const sidebar = document.getElementById('mainSidebar');
-const overlay = document.getElementById('sidebarOverlay');
-const toggleSidebar = document.getElementById('toggleSidebar');
-toggleSidebar.addEventListener('click', ()=>{sidebar.classList.toggle('open'); overlay.classList.toggle('active');});
-overlay.addEventListener('click', ()=>{sidebar.classList.remove('open'); overlay.classList.remove('active');});
+(function(){
+"use strict";
 
-const loadScreen = document.getElementById('loadingScreen');
-const loadProgress = document.getElementById('loadProgress');
-const loadPercent = document.getElementById('loadPercent');
-const loadStatus = document.getElementById('loadStatus');
-const statusList = ['Memuat sistem...','Menyiapkan antarmuka...','Memuat grafik...','Siap digunakan!'];
-let progress = 0, statusIndex = 0;
-const loadInterval = setInterval(()=>{
-    progress += Math.floor(Math.random()*5)+2;
-    if(progress>=100){ progress=100; clearInterval(loadInterval); setTimeout(()=>loadScreen.classList.add('hidden'), 800); }
-    loadProgress.style.width = progress+'%';
-    loadPercent.textContent = progress+'%';
-    if(progress>=(statusIndex+1)*25 && statusIndex<statusList.length-1){ statusIndex++; loadStatus.textContent = statusList[statusIndex]; }
-}, 120);
+/* ============================================================
+   CONFIG
+============================================================ */
+const PAIRS = [
+  {sym:"BTCUSDT", base:"BTC", name:"Bitcoin"},
+  {sym:"ETHUSDT", base:"ETH", name:"Ethereum"},
+  {sym:"SOLUSDT", base:"SOL", name:"Solana"},
+  {sym:"BNBUSDT", base:"BNB", name:"BNB"},
+  {sym:"XRPUSDT", base:"XRP", name:"XRP"},
+];
+const TIMEFRAMES = [
+  {label:"1m", interval:"1m"},
+  {label:"5m", interval:"5m"},
+  {label:"15m", interval:"15m"},
+  {label:"1H", interval:"1h"},
+  {label:"4H", interval:"4h"},
+  {label:"1D", interval:"1d"},
+  {label:"1W", interval:"1w"},
+];
+// Kepemilikan contoh statis — didemokan karena tidak ada backend/akun nyata.
+// Nilai portofolio DIHITUNG dari harga live Binance, bukan angka acak.
+const HOLDINGS = { BTCUSDT:0.148, ETHUSDT:2.35, SOLUSDT:24.6, BNBUSDT:3.4, XRPUSDT:640 };
+const CASH_BALANCE = 2450.32;
 
-function updateTime(){
-    const now = new Date();
-    const hari = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'][now.getDay()];
-    const bulan = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'][now.getMonth()];
-    document.getElementById('currentDate').textContent = `${hari}, ${now.getDate()} ${bulan} ${now.getFullYear()}`;
-    document.getElementById('currentTime').textContent = now.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit',second:'2-digit'})+' WIB';
+let state = {
+  pair: "BTCUSDT",
+  interval: "1m",
+  theme: localStorage.getItem("mz_theme") || "dark",
+  autoReconnect: true,
+  tickers: {},        // sym -> {price, changePct, high, low, vol, quoteVol}
+  klineHistory: {},    // sym -> {"1d": [{time,open,high,low,close}...]}
+  ws: null,
+  wsRetry: 0,
+  wsConnected: false,
+  candleSeries: null,
+  volumeSeries: null,
+  chart: null,
+  volChart: null,
+  activity: [],
+  activityUnread: 0,
+  marketCapGlobal: null,
+  currentCandle: null,
+};
+
+const $ = (s,root)=> (root||document).querySelector(s);
+const $$ = (s,root)=> Array.from((root||document).querySelectorAll(s));
+const fmt = (n, d=2)=> {
+  if(n===null||n===undefined||isNaN(n)) return "-";
+  return Number(n).toLocaleString("en-US",{minimumFractionDigits:d,maximumFractionDigits:d});
+};
+const fmtPrice = (n, sym)=>{
+  if(n===null||n===undefined||isNaN(n)) return "-";
+  const digits = (sym==="XRPUSDT") ? 4 : (n<10?4:2);
+  return "$"+fmt(n,digits);
+};
+const fmtCompact = (n)=>{
+  if(n===null||n===undefined||isNaN(n)) return "-";
+  if(Math.abs(n)>=1e12) return (n/1e12).toFixed(2)+"T";
+  if(Math.abs(n)>=1e9) return (n/1e9).toFixed(2)+"B";
+  if(Math.abs(n)>=1e6) return (n/1e6).toFixed(2)+"M";
+  if(Math.abs(n)>=1e3) return (n/1e3).toFixed(2)+"K";
+  return fmt(n,2);
+};
+const pairMeta = (sym)=> PAIRS.find(p=>p.sym===sym);
+
+/* ============================================================
+   ICONS (mini svg strings)
+============================================================ */
+const ICONS = {
+  wallet:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7a2 2 0 012-2h13a1 1 0 011 1v2"/><path d="M3 7v11a2 2 0 002 2h14a1 1 0 001-1v-8a1 1 0 00-1-1h-5a2 2 0 000 4h6"/></svg>',
+  chart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19V9M10 19V5M16 19v-7M22 19H2"/></svg>',
+  bolt:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg>',
+  globe:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 010 18 14 14 0 010-18z"/></svg>',
+  btc:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M9 8h4.5a2 2 0 010 4H9m0 0h5a2 2 0 010 4H9m1.5-8V6m0 12v-2m3-10v2m0 10v-2"/></svg>',
+  eth:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l7 11-7 4-7-4z"/><path d="M12 22l7-9-7 4-7-4z"/></svg>',
+  gauge:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 14l4-4"/><circle cx="12" cy="14" r="7"/><path d="M8 4h8"/></svg>',
+  server:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="6" rx="1.5"/><rect x="3" y="14" width="18" height="6" rx="1.5"/><path d="M7 7h.01M7 17h.01"/></svg>',
+  up:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg>',
+  down:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg>',
+};
+
+/* ============================================================
+   NAVIGATION
+============================================================ */
+function goToPage(name){
+  $$(".nav-item").forEach(n=> n.classList.toggle("active", n.dataset.page===name));
+  $$(".bottom-nav button").forEach(n=> n.classList.toggle("active", n.dataset.page===name));
+  $$(".page").forEach(p=> p.classList.toggle("active", p.id==="page-"+name));
+  const titles = {
+    dashboard:["Dashboard Overview","Ringkasan portofolio & pasar real-time"],
+    market:["Market","Data live 5 pair utama dari Binance"],
+    portfolio:["Portfolio Analytics","Dihitung dari harga live Binance"],
+    transactions:["Riwayat Transaksi","Contoh data transaksi (demo statis)"],
+    activity:["Log Aktivitas Sistem","Event koneksi dan pasar terbaru"],
+    settings:["Pengaturan","Preferensi tampilan & sistem"],
+  };
+  const t = titles[name] || titles.dashboard;
+  $("#pageTitle").textContent = t[0];
+  $("#pageSubtitle").textContent = t[1];
+  closeSidebarMobile();
+  if(name==="activity"){ state.activityUnread=0; updateActivityBadge(); }
 }
-updateTime(); setInterval(updateTime, 1000);
+$$(".nav-item").forEach(item=> item.addEventListener("click", ()=> goToPage(item.dataset.page)));
+$$(".bottom-nav button").forEach(item=> item.addEventListener("click", ()=> goToPage(item.dataset.page)));
 
-document.getElementById('modeSwitch').addEventListener('change', e=>{document.body.classList.toggle('dark', e.target.checked);});
+function openSidebarMobile(){ $("#sidebar").classList.add("open"); $("#sidebarScrim").classList.add("show"); }
+function closeSidebarMobile(){ $("#sidebar").classList.remove("open"); $("#sidebarScrim").classList.remove("show"); }
+$("#burgerBtn").addEventListener("click", openSidebarMobile);
+$("#sidebarScrim").addEventListener("click", closeSidebarMobile);
 
-document.querySelectorAll('.tab-link').forEach(link=>{
-    link.addEventListener('click', e=>{
-        e.preventDefault();
-        document.querySelectorAll('.tab-link').forEach(l=>{l.classList.remove('active','text-white'); l.classList.add('text-abuLunak');});
-        link.classList.add('active','text-white'); link.classList.remove('text-abuLunak');
-        document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
-        document.getElementById(link.dataset.tab).classList.add('active');
-        if(window.innerWidth<1024){sidebar.classList.remove('open'); overlay.classList.remove('active');}
+/* ============================================================
+   THEME
+============================================================ */
+function applyTheme(t){
+  document.documentElement.setAttribute("data-theme", t);
+  localStorage.setItem("mz_theme", t);
+  state.theme = t;
+  $$("#themeSeg button").forEach(b=> b.classList.toggle("active", b.dataset.t===t));
+  $("#themeIcon").innerHTML = t==="dark"
+    ? '<path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/>'
+    : '<circle cx="12" cy="12" r="5"/><path d="M12 1v3M12 20v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M1 12h3M20 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/>';
+  if(state.chart){
+    const grid = t==="dark" ? "rgba(255,255,255,0.05)" : "rgba(10,10,11,0.06)";
+    const text = t==="dark" ? "#9a9aa1" : "#6b6b72";
+    [state.chart,state.volChart].forEach(c=> c && c.applyOptions({
+      layout:{ textColor:text, background:{type:"solid", color:"transparent"} },
+      grid:{ vertLines:{color:grid}, horzLines:{color:grid} },
+    }));
+  }
+}
+applyTheme(state.theme);
+$("#themeBtn").addEventListener("click", ()=> applyTheme(state.theme==="dark"?"light":"dark"));
+$$("#themeSeg button").forEach(b=> b.addEventListener("click", ()=> applyTheme(b.dataset.t)));
+
+/* ============================================================
+   CLOCK
+============================================================ */
+function tickClock(){
+  const now = new Date();
+  $("#clockTime").textContent = now.toLocaleTimeString("id-ID",{hour12:false});
+  $("#clockDate").textContent = now.toLocaleDateString("id-ID",{weekday:"short", day:"2-digit", month:"short", year:"numeric"});
+}
+tickClock(); setInterval(tickClock, 1000);
+
+/* ============================================================
+   ACTIVITY LOG (real system/connection/market events)
+============================================================ */
+function pushActivity(text, type){
+  const item = { text, type: type||"info", time: new Date() };
+  state.activity.unshift(item);
+  if(state.activity.length>80) state.activity.pop();
+  state.activityUnread++;
+  updateActivityBadge();
+  renderActivity();
+}
+function updateActivityBadge(){
+  $("#activityBadge").textContent = state.activityUnread>99 ? "99+" : state.activityUnread;
+  $("#activityBadge").style.display = state.activityUnread>0 ? "inline-block" : "none";
+  $("#bellPing").style.display = state.activityUnread>0 ? "block" : "none";
+}
+function timeAgo(d){
+  const s = Math.floor((Date.now()-d.getTime())/1000);
+  if(s<5) return "baru saja";
+  if(s<60) return s+"d lalu";
+  const m = Math.floor(s/60); if(m<60) return m+"m lalu";
+  const h = Math.floor(m/60); if(h<24) return h+"j lalu";
+  return Math.floor(h/24)+"hr lalu";
+}
+function dotColor(type){
+  return type==="success" ? "var(--up)" : type==="error" ? "var(--down)" : "var(--text-faint)";
+}
+function renderActivity(){
+  const rowsHtml = (limit)=> state.activity.slice(0, limit||999).map(a=>
+    '<div class="activity-row"><span class="activity-dot" style="background:'+dotColor(a.type)+'"></span>'+
+    '<div class="txt"><p>'+a.text+'</p><time>'+timeAgo(a.time)+'</time></div></div>'
+  ).join("") || '<div class="activity-row"><div class="txt"><p style="color:var(--text-faint)">Belum ada aktivitas.</p></div></div>';
+  $("#notifList").innerHTML = rowsHtml(8);
+  $("#fullActivityList").innerHTML = rowsHtml();
+  $("#dashActivityList").innerHTML = rowsHtml(6);
+}
+setInterval(()=>{ // refresh relative timestamps
+  $$(".activity-row time").forEach((el,i)=>{ if(state.activity[i]) el.textContent = timeAgo(state.activity[i].time); });
+}, 15000);
+
+$("#bellBtn").addEventListener("click", (e)=>{ e.stopPropagation(); $("#notifDropdown").classList.toggle("open"); state.activityUnread=0; updateActivityBadge(); });
+$("#notifClear").addEventListener("click", ()=>{ state.activityUnread=0; updateActivityBadge(); });
+$("#clearLogBtn").addEventListener("click", ()=>{ state.activity=[]; state.activityUnread=0; updateActivityBadge(); renderActivity(); });
+document.addEventListener("click", (e)=>{ if(!e.target.closest(".dropdown") && !e.target.closest("#bellBtn")) $("#notifDropdown").classList.remove("open"); });
+
+/* ============================================================
+   CONNECTION STATUS UI
+============================================================ */
+function setConnStatus(status){ // "connecting" | "live" | "down"
+  const dot = $("#sidebarStatusDot");
+  const text = $("#sidebarStatusText");
+  const sub = $("#sidebarStatusSub");
+  const live = $("#liveTag");
+  const settingsTag = $("#settingsConnTag");
+  const settingsSub = $("#settingsConnSub");
+  dot.className = "status-dot" + (status==="live"?" live": status==="down"?" down":"");
+  if(status==="live"){
+    text.textContent="Live"; sub.textContent="Binance WebSocket"; live.classList.remove("off"); live.innerHTML='<span class="d"></span>LIVE';
+    settingsTag.textContent="LIVE"; settingsTag.className="tag buy"; settingsSub.textContent="Terhubung ke Binance WebSocket";
+  } else if(status==="down"){
+    text.textContent="Disconnected"; sub.textContent="Mencoba menyambung ulang..."; live.classList.add("off"); live.innerHTML='<span class="d"></span>DISCONNECTED';
+    settingsTag.textContent="DOWN"; settingsTag.className="tag sell"; settingsSub.textContent="Koneksi terputus — reconnect otomatis aktif";
+  } else {
+    text.textContent="Connecting"; sub.textContent="Menyambungkan..."; live.classList.add("off"); live.innerHTML='<span class="d"></span>CONNECTING';
+    settingsTag.textContent="..."; settingsTag.className="tag"; settingsTag.style.color="var(--text-dim)"; settingsTag.style.background="var(--glass)"; settingsSub.textContent="Menyambungkan ke Binance...";
+  }
+}
+
+/* ============================================================
+   STAT CARDS (Dashboard)
+============================================================ */
+const STAT_DEFS = [
+  {id:"totalPortfolio", label:"Total Portfolio", icon:ICONS.wallet},
+  {id:"pnl", label:"Profit / Loss", icon:ICONS.chart},
+  {id:"todayPerf", label:"Today's Performance", icon:ICONS.bolt},
+  {id:"marketCap", label:"Market Cap (Global)", icon:ICONS.globe},
+  {id:"btcPrice", label:"BTC Price", icon:ICONS.btc},
+  {id:"ethPrice", label:"ETH Price", icon:ICONS.eth},
+  {id:"latency", label:"Data Latency", icon:ICONS.gauge},
+  {id:"sysStatus", label:"System Status", icon:ICONS.server},
+];
+function buildStatCards(){
+  $("#statCards").innerHTML = STAT_DEFS.map(s=>
+    '<div class="stat-card" id="card-'+s.id+'">'+
+      '<div class="top"><div class="icon">'+s.icon+'</div><span class="delta" id="delta-'+s.id+'" style="display:none"></span></div>'+
+      '<label>'+s.label+'</label>'+
+      '<div class="value mono" id="val-'+s.id+'">-</div>'+
+      '<div class="sub" id="sub-'+s.id+'"></div>'+
+    '</div>'
+  ).join("");
+}
+function setStat(id, value, opts){
+  opts = opts||{};
+  const el = $("#val-"+id); if(!el) return;
+  const prevText = el.textContent;
+  el.textContent = value;
+  if(opts.flash && prevText!=="-" && prevText!==value){
+    el.classList.remove("flash-up","flash-down");
+    void el.offsetWidth;
+    el.classList.add(opts.flash==="up"?"flash-up":"flash-down");
+  }
+  if(opts.sub!==undefined) $("#sub-"+id).textContent = opts.sub;
+  if(opts.delta!==undefined){
+    const d = $("#delta-"+id);
+    d.style.display="flex";
+    d.className = "delta "+(opts.delta>=0?"pos":"neg");
+    d.innerHTML = (opts.delta>=0?ICONS.up:ICONS.down)+(Math.abs(opts.delta).toFixed(2))+"%";
+  }
+}
+
+/* ============================================================
+   PAIR SELECTOR + TIMEFRAME BUTTONS
+============================================================ */
+function buildPairSelector(){
+  $("#pairSelect").innerHTML = PAIRS.map(p=>
+    '<button class="pair-btn'+(p.sym===state.pair?" active":"")+'" data-sym="'+p.sym+'">'+
+      '<span class="dot">'+p.base.slice(0,1)+'</span>'+p.base+'/USDT</button>'
+  ).join("");
+  $$(".pair-btn").forEach(b=> b.addEventListener("click", ()=> switchPair(b.dataset.sym)));
+}
+function buildTfButtons(){
+  $("#tfGroup").innerHTML = TIMEFRAMES.map(t=>
+    '<button class="tf-btn'+(t.interval===state.interval?" active":"")+'" data-int="'+t.interval+'">'+t.label+'</button>'
+  ).join("");
+  $$(".tf-btn").forEach(b=> b.addEventListener("click", ()=> switchInterval(b.dataset.int)));
+}
+function switchPair(sym){
+  if(sym===state.pair) return;
+  state.pair = sym;
+  $$(".pair-btn").forEach(b=> b.classList.toggle("active", b.dataset.sym===sym));
+  loadHistoryAndReconnect();
+}
+function switchInterval(intv){
+  if(intv===state.interval) return;
+  state.interval = intv;
+  $$(".tf-btn").forEach(b=> b.classList.toggle("active", b.dataset.int===intv));
+  loadHistoryAndReconnect();
+}
+
+/* ============================================================
+   CHART (Lightweight Charts)
+============================================================ */
+function initCharts(){
+  const dark = state.theme==="dark";
+  const commonOpts = {
+    layout:{ background:{type:"solid", color:"transparent"}, textColor: dark?"#9a9aa1":"#6b6b72", fontFamily:"JetBrains Mono, monospace", fontSize:11 },
+    grid:{ vertLines:{color: dark?"rgba(255,255,255,0.05)":"rgba(10,10,11,0.06)"}, horzLines:{color: dark?"rgba(255,255,255,0.05)":"rgba(10,10,11,0.06)"} },
+    crosshair:{ mode: LightweightCharts.CrosshairMode.Normal,
+      vertLine:{color:"rgba(150,150,150,0.5)", width:1, style:2, labelBackgroundColor:"#26262a"},
+      horzLine:{color:"rgba(150,150,150,0.5)", width:1, style:2, labelBackgroundColor:"#26262a"} },
+    rightPriceScale:{ borderVisible:false, scaleMargins:{top:0.08, bottom:0.05} },
+    timeScale:{ borderVisible:false, timeVisible:true, secondsVisible:false },
+    handleScroll:true, handleScale:true,
+  };
+  state.chart = LightweightCharts.createChart($("#candleChart"), Object.assign({}, commonOpts, {
+    height:420, rightPriceScale:{ borderVisible:false, scaleMargins:{top:0.1, bottom:0.05} },
+  }));
+  state.candleSeries = state.chart.addCandlestickSeries({
+    upColor:"#22c55e", downColor:"#f0464b", borderVisible:false,
+    wickUpColor:"#22c55e", wickDownColor:"#f0464b",
+  });
+
+  state.volChart = LightweightCharts.createChart($("#volumeChart"), Object.assign({}, commonOpts, {
+    height:100, rightPriceScale:{ borderVisible:false, scaleMargins:{top:0.15, bottom:0} },
+    timeScale:{ borderVisible:false, visible:false },
+  }));
+  state.volumeSeries = state.volChart.addHistogramSeries({ priceFormat:{type:"volume"}, priceLineVisible:false });
+
+  // sync time scales
+  state.chart.timeScale().subscribeVisibleLogicalRangeChange(r=>{ if(r) state.volChart.timeScale().setVisibleLogicalRange(r); });
+  state.volChart.timeScale().subscribeVisibleLogicalRangeChange(r=>{ if(r) state.chart.timeScale().setVisibleLogicalRange(r); });
+
+  state.chart.subscribeCrosshairMove(param=>{
+    if(!param || !param.time || !param.seriesData){ return; }
+    const d = param.seriesData.get(state.candleSeries);
+    if(d) setOHLC(d.open, d.high, d.low, d.close, null);
+  });
+
+  window.addEventListener("resize", ()=>{
+    const w1 = $("#candleChart").clientWidth, w2 = $("#volumeChart").clientWidth;
+    if(state.chart) state.chart.applyOptions({width:w1});
+    if(state.volChart) state.volChart.applyOptions({width:w2});
+  });
+}
+
+function setOHLC(o,h,l,c,vol){
+  const sym = state.pair;
+  $("#ohlcO").textContent = fmtPrice(o, sym);
+  $("#ohlcH").textContent = fmtPrice(h, sym);
+  $("#ohlcL").textContent = fmtPrice(l, sym);
+  $("#ohlcC").textContent = fmtPrice(c, sym);
+  if(vol!==null && vol!==undefined) $("#ohlcV").textContent = fmtCompact(vol);
+}
+
+function showChartLoading(show){ $("#chartLoading").classList.toggle("hide", !show); }
+function showChartError(show, msg){ $("#chartErr").classList.toggle("show", show); if(msg) $("#chartErrMsg").textContent = msg; }
+
+async function fetchKlines(symbol, interval, limit){
+  const url = "https://api.binance.com/api/v3/klines?symbol="+symbol+"&interval="+interval+"&limit="+(limit||300);
+  const res = await fetch(url);
+  if(!res.ok) throw new Error("HTTP "+res.status);
+  const raw = await res.json();
+  return raw.map(k=> ({
+    time: Math.floor(k[0]/1000),
+    open: parseFloat(k[1]), high: parseFloat(k[2]), low: parseFloat(k[3]), close: parseFloat(k[4]),
+    volume: parseFloat(k[5]), closeTime: k[6],
+  }));
+}
+
+async function loadHistoryAndReconnect(){
+  showChartLoading(true); showChartError(false);
+  try{
+    const candles = await fetchKlines(state.pair, state.interval, 400);
+    state.candleSeries.setData(candles.map(c=>({time:c.time, open:c.open, high:c.high, low:c.low, close:c.close})));
+    state.volumeSeries.setData(candles.map(c=>({time:c.time, value:c.volume, color: c.close>=c.open? "rgba(34,197,94,0.55)" : "rgba(240,70,75,0.55)"})));
+    state.chart.timeScale().fitContent(); state.volChart.timeScale().fitContent();
+    const last = candles[candles.length-1];
+    if(last){ setOHLC(last.open,last.high,last.low,last.close,last.volume); state.currentCandle = Object.assign({},last); }
+    showChartLoading(false);
+    pushActivity("Data candlestick "+pairMeta(state.pair).base+"/USDT ("+state.interval+") dimuat", "success");
+    connectSocket();
+  }catch(err){
+    showChartLoading(false);
+    showChartError(true, "Tidak dapat mengambil data dari Binance API. Periksa koneksi internet Anda. ("+err.message+")");
+    pushActivity("Gagal memuat data pasar: "+err.message, "error");
+  }
+}
+
+/* ============================================================
+   WEBSOCKET (combined stream: 5x ticker + 1x kline)
+============================================================ */
+function buildStreamList(){
+  const tickers = PAIRS.map(p=> p.sym.toLowerCase()+"@ticker");
+  const kline = state.pair.toLowerCase()+"@kline_"+state.interval;
+  return tickers.concat([kline]);
+}
+function connectSocket(){
+  if(state.ws){ try{ state.ws.onclose=null; state.ws.close(); }catch(e){} }
+  setConnStatus("connecting");
+  const streams = buildStreamList().join("/");
+  const url = "wss://stream.binance.com:9443/stream?streams="+streams;
+  let sock;
+  try{ sock = new WebSocket(url); } catch(e){ handleSocketDown(); return; }
+  state.ws = sock;
+
+  sock.onopen = ()=>{
+    state.wsConnected = true; state.wsRetry = 0;
+    setConnStatus("live");
+    pushActivity("Koneksi WebSocket Binance tersambung", "success");
+  };
+  sock.onmessage = (evt)=>{
+    let msg; try{ msg = JSON.parse(evt.data); }catch(e){ return; }
+    if(!msg || !msg.stream || !msg.data) return;
+    if(msg.stream.endsWith("@ticker")) handleTicker(msg.data);
+    else if(msg.stream.indexOf("@kline_")!==-1) handleKline(msg.data);
+  };
+  sock.onerror = ()=>{ /* onclose will handle reconnect */ };
+  sock.onclose = ()=>{
+    if(state.wsConnected){ pushActivity("Koneksi API terputus — mencoba reconnect otomatis", "error"); }
+    state.wsConnected = false;
+    handleSocketDown();
+  };
+}
+function handleSocketDown(){
+  setConnStatus("down");
+  if(!state.autoReconnect) return;
+  state.wsRetry++;
+  const delay = Math.min(1000 * Math.pow(1.6, state.wsRetry), 15000);
+  setTimeout(()=>{ if(state.autoReconnect) connectSocket(); }, delay);
+}
+
+let lastMsgServerTime = null;
+function handleTicker(d){
+  const sym = d.s;
+  lastMsgServerTime = d.E;
+  const prevPrice = state.tickers[sym] ? state.tickers[sym].price : null;
+  state.tickers[sym] = {
+    price: parseFloat(d.c), changePct: parseFloat(d.P), high: parseFloat(d.h), low: parseFloat(d.l),
+    volume: parseFloat(d.v), quoteVolume: parseFloat(d.q), openPrice: parseFloat(d.o), serverTime: d.E,
+    dir: prevPrice!==null ? (parseFloat(d.c) > prevPrice ? "up" : parseFloat(d.c) < prevPrice ? "down" : null) : null,
+  };
+  $("#lastUpdateTxt").textContent = "Last update: " + new Date().toLocaleTimeString("id-ID",{hour12:false});
+  renderTickerDependentUI(sym);
+}
+function handleKline(d){
+  const k = d.k;
+  const candle = { time: Math.floor(k.t/1000), open: parseFloat(k.o), high: parseFloat(k.h), low: parseFloat(k.l), close: parseFloat(k.c), volume: parseFloat(k.v) };
+  state.candleSeries.update({time:candle.time, open:candle.open, high:candle.high, low:candle.low, close:candle.close});
+  state.volumeSeries.update({time:candle.time, value:candle.volume, color: candle.close>=candle.open?"rgba(34,197,94,0.55)":"rgba(240,70,75,0.55)"});
+  state.currentCandle = candle;
+  setOHLC(candle.open, candle.high, candle.low, candle.close, candle.volume);
+  if(k.x){ pushActivity("Candle baru terbentuk "+pairMeta(state.pair).base+"/USDT ("+state.interval+")", "info"); }
+}
+
+/* ============================================================
+   RENDER: hero price, cards, watchlist, market table, gainers/losers
+============================================================ */
+function renderTickerDependentUI(changedSym){
+  const t = state.tickers[state.pair];
+  if(t){
+    const priceEl = $("#heroPrice");
+    priceEl.textContent = fmtPrice(t.price, state.pair);
+    if(t.dir){ priceEl.classList.remove("flash-up","flash-down"); void priceEl.offsetWidth; priceEl.classList.add(t.dir==="up"?"flash-up":"flash-down"); }
+    const chg = $("#heroChg");
+    chg.textContent = (t.changePct>=0?"+":"")+t.changePct.toFixed(2)+"%";
+    chg.className = "chg mono " + (t.changePct>=0?"up":"down");
+    chg.style.background = t.changePct>=0 ? "var(--up-glow)" : "var(--down-glow)";
+  }
+  if(state.tickers["BTCUSDT"]) setStat("btcPrice", fmtPrice(state.tickers["BTCUSDT"].price,"BTCUSDT"), {flash: changedSym==="BTCUSDT"?(state.tickers["BTCUSDT"].dir):null, delta: state.tickers["BTCUSDT"].changePct});
+  if(state.tickers["ETHUSDT"]) setStat("ethPrice", fmtPrice(state.tickers["ETHUSDT"].price,"ETHUSDT"), {flash: changedSym==="ETHUSDT"?(state.tickers["ETHUSDT"].dir):null, delta: state.tickers["ETHUSDT"].changePct});
+
+  updateLatency();
+  renderWatchlist();
+  renderMarketTable();
+  renderGainersLosers();
+  updatePortfolioLive();
+  if(state.currentTxRender!==true){} // no-op guard
+}
+
+function updateLatency(){
+  if(!lastMsgServerTime) return;
+  const latency = Math.max(0, Date.now() - lastMsgServerTime);
+  setStat("latency", latency+" ms", {sub:"Server → browser"});
+}
+
+function allTickersReady(){ return PAIRS.every(p=> state.tickers[p.sym]); }
+
+function renderWatchlist(){
+  if(!allTickersReady()) return;
+  $("#watchlistRail").innerHTML = PAIRS.map(p=>{
+    const t = state.tickers[p.sym];
+    return '<div class="rail-item"><div class="l"><div class="dot">'+p.base.slice(0,1)+'</div><div><b>'+p.base+'/USDT</b><span>Vol '+fmtCompact(t.quoteVolume)+'</span></div></div>'+
+      '<div class="r"><b class="mono">'+fmtPrice(t.price,p.sym)+'</b><span class="'+(t.changePct>=0?"up":"down")+'">'+(t.changePct>=0?"+":"")+t.changePct.toFixed(2)+'%</span></div></div>';
+  }).join("");
+}
+
+function renderMarketTable(){
+  if(!allTickersReady()) return;
+  let rows = PAIRS.map(p=> Object.assign({}, state.tickers[p.sym], {base:p.base, sym:p.sym}));
+  const activeFilter = ($(".filter-chip.active")||{}).dataset ? $(".filter-chip.active").dataset.filter : "all";
+  if(activeFilter==="gainers") rows = rows.filter(r=>r.changePct>0).sort((a,b)=>b.changePct-a.changePct);
+  else if(activeFilter==="losers") rows = rows.filter(r=>r.changePct<0).sort((a,b)=>a.changePct-b.changePct);
+  else if(activeFilter==="volume") rows = rows.sort((a,b)=>b.quoteVolume-a.quoteVolume);
+
+  const q = ($("#globalSearch").value||"").trim().toUpperCase();
+  if(q) rows = rows.filter(r=> r.base.includes(q) || r.sym.includes(q));
+
+  if(rows.length===0){ $("#marketTableBody").innerHTML = '<tr class="empty-row"><td colspan="7">Tidak ada aset yang cocok.</td></tr>'; return; }
+
+  $("#marketTableBody").innerHTML = rows.map(r=>
+    '<tr><td><div class="coin-cell"><div class="dot">'+r.base.slice(0,1)+'</div><div><b>'+r.base+'</b><span>'+pairMeta(r.sym).name+'</span></div></div></td>'+
+    '<td class="mono num">'+fmtPrice(r.price,r.sym)+'</td>'+
+    '<td class="mono num '+(r.changePct>=0?"up":"down")+'">'+(r.changePct>=0?"+":"")+r.changePct.toFixed(2)+'%</td>'+
+    '<td class="mono num">'+fmtPrice(r.high,r.sym)+'</td>'+
+    '<td class="mono num">'+fmtPrice(r.low,r.sym)+'</td>'+
+    '<td class="mono num">$'+fmtCompact(r.quoteVolume)+'</td>'+
+    '<td><span class="tag '+(r.changePct>=0?"buy":"sell")+'">'+(r.changePct>=0?"Bullish":"Bearish")+'</span></td></tr>'
+  ).join("");
+}
+$$(".filter-chip").forEach(c=> c.addEventListener("click", ()=>{ $$(".filter-chip").forEach(x=>x.classList.remove("active")); c.classList.add("active"); renderMarketTable(); }));
+$("#globalSearch").addEventListener("input", ()=>{ renderMarketTable(); renderTxTable(); });
+
+function renderGainersLosers(){
+  if(!allTickersReady()) return;
+  const sorted = PAIRS.map(p=> Object.assign({}, state.tickers[p.sym], {base:p.base}));
+  const gainers = [...sorted].sort((a,b)=>b.changePct-a.changePct).slice(0,3);
+  const losers = [...sorted].sort((a,b)=>a.changePct-b.changePct).slice(0,3);
+  const row = (r)=> '<div class="mini-stat"><span>'+r.base+'/USDT</span><b class="'+(r.changePct>=0?"up":"down")+'">'+(r.changePct>=0?"+":"")+r.changePct.toFixed(2)+'%</b></div>';
+  $("#gainersBox").innerHTML = '<div style="font-size:11px;color:var(--text-faint);margin-bottom:4px;font-weight:600">TOP GAINERS</div>'+gainers.map(row).join("");
+  $("#losersBox").innerHTML = '<div style="font-size:11px;color:var(--text-faint);margin-bottom:4px;font-weight:600">TOP LOSERS</div>'+losers.map(row).join("");
+}
+
+/* ============================================================
+   PORTFOLIO
+============================================================ */
+function computePortfolio(){
+  if(!allTickersReady()) return null;
+  let total = CASH_BALANCE, invested = 0, pnl24h = 0;
+  const rows = PAIRS.map(p=>{
+    const qty = HOLDINGS[p.sym]||0;
+    const t = state.tickers[p.sym];
+    const value = qty * t.price;
+    const value24hAgo = qty * (t.price/(1+t.changePct/100));
+    invested += value;
+    pnl24h += (value - value24hAgo);
+    return {sym:p.sym, base:p.base, qty, price:t.price, value, changePct:t.changePct};
+  });
+  total += invested;
+  return {total, invested, cash:CASH_BALANCE, pnl24h, rows};
+}
+function updatePortfolioLive(){
+  const pf = computePortfolio();
+  if(!pf) return;
+  setStat("totalPortfolio", "$"+fmt(pf.total,2), {sub:"Termasuk cash $"+fmt(pf.cash,2)});
+  setStat("pnl", (pf.pnl24h>=0?"+$":"-$")+fmt(Math.abs(pf.pnl24h),2), {delta: (pf.pnl24h/(pf.total-pf.pnl24h))*100});
+  setStat("todayPerf", (pf.pnl24h>=0?"+":"")+((pf.pnl24h/(pf.total-pf.pnl24h))*100).toFixed(2)+"%", {sub:"Perubahan nilai 24 jam"});
+
+  if($("#page-portfolio").classList.contains("active")) renderPortfolioPage(pf);
+}
+function renderPortfolioPage(pf){
+  pf = pf || computePortfolio();
+  if(!pf) return;
+  $("#portfolioCards").innerHTML = [
+    {label:"Total Balance", val:"$"+fmt(pf.total,2)},
+    {label:"Available Balance (Cash)", val:"$"+fmt(pf.cash,2)},
+    {label:"Invested Balance", val:"$"+fmt(pf.invested,2)},
+    {label:"Total P/L (24h)", val:(pf.pnl24h>=0?"+$":"-$")+fmt(Math.abs(pf.pnl24h),2), cls: pf.pnl24h>=0?"up":"down"},
+  ].map(c=> '<div class="stat-card"><label>'+c.label+'</label><div class="value mono '+(c.cls||"")+'">'+c.val+'</div></div>').join("");
+
+  $("#holdingsList").innerHTML = pf.rows.map(r=>
+    '<div class="mini-stat"><span>'+r.base+' · '+fmt(r.qty,4)+'</span><b class="mono">$'+fmt(r.value,2)+' <span class="'+(r.changePct>=0?"up":"down")+'" style="font-size:10.5px">('+(r.changePct>=0?"+":"")+r.changePct.toFixed(1)+'%)</span></b></div>'
+  ).join("");
+
+  drawAllocationChart(pf);
+}
+function drawAllocationChart(pf){
+  const canvas = $("#allocChart"); if(!canvas) return;
+  const ctx = canvas.getContext("2d");
+  const dpr = window.devicePixelRatio||1;
+  const size = 220;
+  canvas.width = size*dpr; canvas.height = size*dpr; canvas.style.width=size+"px"; canvas.style.height=size+"px";
+  ctx.scale(dpr,dpr);
+  ctx.clearRect(0,0,size,size);
+  const colors = ["#f2f2f3","#c9c9cd","#9a9aa1","#6b6b72","#454549"];
+  const slices = pf.rows.map((r,i)=> ({label:r.base, value:r.value, color:colors[i%colors.length]}));
+  slices.push({label:"Cash", value:pf.cash, color:"#2a2a2e"});
+  const total = slices.reduce((a,s)=>a+s.value,0) || 1;
+  let angle = -Math.PI/2;
+  const cx=size/2, cy=size/2, rOuter=size/2-6, rInner=rOuter*0.62;
+  slices.forEach(s=>{
+    const slice = (s.value/total)*Math.PI*2;
+    ctx.beginPath();
+    ctx.arc(cx,cy,rOuter,angle,angle+slice);
+    ctx.arc(cx,cy,rInner,angle+slice,angle,true);
+    ctx.closePath();
+    ctx.fillStyle = s.color;
+    ctx.fill();
+    angle += slice;
+  });
+  $("#allocLegend").innerHTML = slices.map(s=>
+    '<div class="legend-row"><span class="sq" style="background:'+s.color+'"></span><span>'+s.label+'</span><b>'+((s.value/total)*100).toFixed(1)+'%</b></div>'
+  ).join("");
+}
+
+/* ============================================================
+   TRANSACTIONS (demo static ledger, clearly labelled)
+============================================================ */
+function genTransactions(){
+  // Data statis contoh (bukan live) — didemokan karena dashboard tidak punya backend transaksi.
+  const list = [];
+  const types = ["buy","sell"];
+  const now = Date.now();
+  const seed = [
+    ["BTCUSDT",0.012,"buy"],["ETHUSDT",0.85,"sell"],["SOLUSDT",6.2,"buy"],
+    ["BNBUSDT",1.1,"buy"],["XRPUSDT",210,"sell"],["BTCUSDT",0.006,"sell"],
+    ["ETHUSDT",1.4,"buy"],["SOLUSDT",3.5,"sell"],["XRPUSDT",90,"buy"],["BNBUSDT",0.6,"sell"],
+  ];
+  seed.forEach((s,i)=>{
+    const p = pairMeta(s[0]);
+    const daysAgo = i*1.7 + 0.3;
+    const t = state.tickers[s[0]];
+    const price = t ? t.price * (1 - (Math.random()*0.04-0.02)) : 0;
+    list.push({
+      date: new Date(now - daysAgo*86400000),
+      sym: s[0], base: p.base, qty: s[1], type: s[2], price: price, total: price*s[1],
+      status: i===0 ? "Pending" : "Selesai",
     });
+  });
+  return list;
+}
+let TX_CACHE = null;
+function renderTxTable(){
+  if(!allTickersReady()) return;
+  if(!TX_CACHE) TX_CACHE = genTransactions();
+  let rows = TX_CACHE;
+  const q = ($("#globalSearch").value||"").trim().toUpperCase();
+  if(q) rows = rows.filter(r=> r.base.includes(q) || r.sym.includes(q));
+  $("#txTableBody").innerHTML = rows.map(r=>
+    '<tr><td>'+r.date.toLocaleDateString("id-ID",{day:"2-digit",month:"short",year:"numeric"})+'</td>'+
+    '<td>'+r.base+'/USDT</td>'+
+    '<td><span class="tag '+(r.type==="buy"?"buy":"sell")+'">'+(r.type==="buy"?"Buy":"Sell")+'</span></td>'+
+    '<td class="mono num">'+fmt(r.qty,4)+'</td>'+
+    '<td class="mono num">'+fmtPrice(r.price,r.sym)+'</td>'+
+    '<td class="mono num">$'+fmt(r.total,2)+'</td>'+
+    '<td>'+r.status+'</td></tr>'
+  ).join("");
+}
+$("#exportCsvBtn").addEventListener("click", ()=>{
+  if(!TX_CACHE) return;
+  let csv = "Tanggal,Pair,Tipe,Jumlah,Harga,Total,Status\n";
+  TX_CACHE.forEach(r=>{ csv += [r.date.toISOString().slice(0,10), r.base+"/USDT", r.type, r.qty, r.price.toFixed(2), r.total.toFixed(2), r.status].join(",")+"\n"; });
+  const blob = new Blob([csv], {type:"text/csv"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = "transaksi-demo.csv"; a.click();
+  pushActivity("File CSV transaksi diekspor", "success");
 });
 
-let grafikPendapatan = null;
-function initDashboard(){
-    let val1=0, val2=0, val3=0, val4=0;
-    const anim = setInterval(()=>{
-        val1 = Math.min(val1+10284,158390);
-        val2 = Math.min(val2+2, 124);
-        val3 = Math.min(val3+3, 356);
-        val4 = Math.min(val4+0.4, 94.7);
-        document.getElementById('pendapatanHari').textContent = val1.toLocaleString('id-ID');
-        document.getElementById('totalProyek').textContent = val2;
-        document.getElementById('pelangganAktif').textContent = val3;
-        document.getElementById('tingkatBerhasil').textContent = val4.toFixed(1);
-        if(val1>=875000 && val2>=124 && val3>=356 && val4>=94.7) clearInterval(anim);
-    }, 40);
-
-    const optGaris = {
-        responsive: true,
-        maintainAspectRatio: false,
-        layout: { padding: { top: 20, right: 20, bottom: 20, left: 5 } },
-        plugins: {
-            legend: {
-                display: true,
-                position: 'top',
-                align: 'start',
-                labels: {
-                    color: '#94A3B8',
-                    font: { size: 18, weight: '600' },
-                    boxWidth: 32,
-                    padding: 30
-                }
-            },
-            tooltip: {
-                backgroundColor: 'rgba(10,15,30,0.95)',
-                borderColor: '#00BFFF',
-                borderWidth: 1,
-                titleColor: '#00BFFF',
-                bodyColor: '#F1F5F9',
-                padding: 14,
-                cornerRadius: 12
-            }
-        },
-        scales: {
-            x: {
-                grid: { color: 'rgba(255,255,255,0.15)', drawBorder: false, lineWidth:1 },
-                ticks: {
-                    color: '#94A3B8',
-                    font: { size: 16, weight:'500' },
-                    maxRotation: 0,
-                    minRotation: 0,
-                    align: 'center'
-                }
-            },
-            y: {
-                min: 400000,
-                max: 1100000,
-                stepSize: 100000,
-                grid: { color: 'rgba(255,255,255,0.15)', drawBorder: false, lineWidth:1 },
-                ticks: {
-                    color: '#94A3B8',
-                    font: { size: 16, weight:'500' },
-                    callback: function(nilai) {
-                        return nilai.toLocaleString('id-ID');
-                    }
-                }
-            }
-        },
-        elements: {
-            line: { tension: 0.3, borderWidth: 6, borderColor: '#00BFFF' },
-            point: {
-                radius: 8,
-                backgroundColor: '#020617',
-                borderColor: '#ffffff',
-                borderWidth: 4,
-                hoverRadius: 10
-            }
-        },
-        animation: { duration: 1200, easing: 'easeOutQuart' }
-    };
-
-    if(grafikPendapatan) grafikPendapatan.destroy();
-    grafikPendapatan = new Chart(document.getElementById('chartPendapatan'),{
-        type: 'line',
-        data: {
-            labels: ['Sen','Sel','Rab','Kam','Jum','Sab','Min','Minggu'],
-            datasets: [{
-                label: 'Pendapatan',
-                data: [420000, 430000, 440000, 435000, 450000, 470000, 485000, 500000],
-                backgroundColor: 'rgba(0,191,255,0.2)',
-                fill: true
-            }]
-        },
-        options: optGaris
-    });
-
-    new Chart(document.getElementById('chartDistribusi'),{
-        type:'doughnut',
-        data:{
-            labels:['Web','Desain','Keamanan','Lainnya'],
-            datasets:[{
-                data:[45,25,20,10],
-                backgroundColor:['#00BFFF','#9370DB','#00B398','#FF9F43'],
-                borderColor:'#ffffff',
-                borderWidth:3,
-                hoverBorderWidth:4
-            }]
-        },
-        options:{
-            responsive:true,
-            maintainAspectRatio:false,
-            cutout:'55%',
-            plugins:{
-                legend:{
-                    position:'bottom',
-                    labels:{
-                        color:'#94A3B8',
-                        font:{size:16, weight:'500'},
-                        boxWidth:28,
-                        padding:20
-                    }
-                }
-            }
-        }
-    });
+/* ============================================================
+   GLOBAL MARKET CAP (CoinGecko REST poll — legit periodic fetch, not fake data)
+============================================================ */
+async function fetchGlobalMarketCap(){
+  try{
+    const res = await fetch("https://api.coingecko.com/api/v3/global");
+    if(!res.ok) throw new Error("HTTP "+res.status);
+    const j = await res.json();
+    const cap = j.data.total_market_cap.usd;
+    const chg = j.data.market_cap_change_percentage_24h_usd;
+    state.marketCapGlobal = cap;
+    setStat("marketCap", "$"+fmtCompact(cap), {delta: chg});
+    pushActivity("Data market cap global diperbarui (CoinGecko)", "info");
+  }catch(e){
+    setStat("marketCap", "N/A", {sub:"Gagal memuat dari CoinGecko"});
+  }
 }
-setTimeout(initDashboard, 800);
 
-document.getElementById('refreshBtn').addEventListener('click', ()=>{
-    loadScreen.classList.remove('hidden');
-    setTimeout(()=>{loadScreen.classList.add('hidden'); initDashboard();}, 1500);
+/* ============================================================
+   SETTINGS SWITCHES
+============================================================ */
+$("#autoReconnectSwitch").addEventListener("click", function(){
+  this.classList.toggle("on");
+  state.autoReconnect = this.classList.contains("on");
 });
+$("#soundSwitch").addEventListener("click", function(){ this.classList.toggle("on"); });
+
+/* ============================================================
+   INIT
+============================================================ */
+function setSysStatusCard(){
+  setStat("sysStatus", "Operational", {sub:"Semua layanan berjalan normal"});
+}
+
+function init(){
+  buildStatCards();
+  buildPairSelector();
+  buildTfButtons();
+  initCharts();
+  setSysStatusCard();
+  renderActivity();
+  pushActivity("Dashboard dimuat — menyambungkan ke Binance...", "info");
+  loadHistoryAndReconnect();
+  fetchGlobalMarketCap();
+  setInterval(fetchGlobalMarketCap, 90000);
+  setInterval(()=>{ if(allTickersReady()){ renderMarketTable(); if($("#page-transactions").classList.contains("active")) renderTxTable(); } }, 4000);
+}
+$("#chartRetryBtn").addEventListener("click", loadHistoryAndReconnect);
+
+// build once tickers are ready for the first time, render tx table too
+const readyPoll = setInterval(()=>{
+  if(allTickersReady()){
+    renderTxTable();
+    renderPortfolioPage();
+    clearInterval(readyPoll);
+  }
+}, 500);
+
+init();
+
+})();
 </script>
 </body>
 </html>
